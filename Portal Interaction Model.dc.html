@@ -225,9 +225,9 @@ input,textarea{font-family:inherit}
       <div style="flex:1;min-width:0;overflow-y:auto">
         <div style="padding:0 0 40px;background:var(--vds-stone);display:flex;flex-direction:column">
 
-          <sc-if value="{{ isP1 }}" hint-placeholder-val="{{ true }}">
+          <sc-if value="{{ hasGreeting }}" hint-placeholder-val="{{ true }}">
           <div style="padding:24px 40px 0">
-            <h1 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.3px; color: #000">Good morning, Danielle</h1>
+            <h1 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.3px; color: #000">{{ persona.greeting }}</h1>
           </div>
           </sc-if>
 
@@ -302,12 +302,6 @@ input,textarea{font-family:inherit}
             </div>
             </div>
           </section>
-          </sc-if>
-
-          <sc-if value="{{ isP2 }}" hint-placeholder-val="{{ false }}">
-          <div style="padding:24px 40px 0">
-            <h1 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.3px; color: #000">Good afternoon, Sergio</h1>
-          </div>
           </sc-if>
 
           <sc-if value="{{ isP2 }}" hint-placeholder-val="{{ false }}">
