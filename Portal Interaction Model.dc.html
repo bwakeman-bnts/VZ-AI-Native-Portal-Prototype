@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="_ds/verizon-business-design-system-4f8be1bd-7c8c-4701-9725-61efe2128025/ui_kits/vbg-marketing/styles.css">
 <script src="_ds/verizon-business-design-system-4f8be1bd-7c8c-4701-9725-61efe2128025/_ds_bundle.js"></script>
 <script src="./image-slot.js"></script>
+<script src="./persona-data.js"></script>
 <style>
 html,body{margin:0;padding:0;background:#fff;font-family:"Verizon NHG eDS","Arial",sans-serif;color:#000}
 *{box-sizing:border-box}
@@ -2741,6 +2742,8 @@ class Component extends DCLogic {
     const crumb = SECTIONS[s.section] || SECTIONS.home;
     const cfg = SECTION_PAGES[s.section] || SECTION_PAGES.manage;
     const summary = SECTION_SUMMARY[s.section] || null;
+    const PERSONA = (window.PERSONAS && window.PERSONAS[s.profile]) || window.PERSONAS[window.PERSONA_DEFAULT];
+    const PERSONA_WIDGETS = PERSONA.canvas || [];
     return {
       tasksOpen: s.tasksOpen !== false,
       tasksChevron: s.tasksOpen !== false ? "rotate(0deg)" : "rotate(-90deg)",
@@ -3040,6 +3043,14 @@ class Component extends DCLogic {
       shopSpanRow: (s.profile || "p1") === "p1" ? "span 2" : "span 1",
       billingSpanCol: s.profile === "p2" ? "span 3" : "span 1",
       billingSpanRow: s.profile === "p2" ? "span 2" : "span 1",
+      persona: PERSONA,
+      hasGreeting: PERSONA_WIDGETS.indexOf("greeting") !== -1,
+      hasLeadOfferHero: PERSONA_WIDGETS.indexOf("leadOfferHero") !== -1,
+      hasBillBreakdownHero: PERSONA_WIDGETS.indexOf("billBreakdownHero") !== -1,
+      hasFleetHealthHero: PERSONA_WIDGETS.indexOf("fleetHealthHero") !== -1,
+      hasEscalateCard: PERSONA_WIDGETS.indexOf("escalateCard") !== -1,
+      hasSecurityStatsGrid: PERSONA_WIDGETS.indexOf("securityStatsGrid") !== -1,
+      hasBillingStatsGrid: PERSONA_WIDGETS.indexOf("billingStatsGrid") !== -1,
       demoProfiles: [
         { initials: "AR", photo: "uploads/ITManagerPic.png", name: "Danielle", role: "IT Manager", description: "Reviewing new devices \u2014 wants to make sure they're getting the best terms.", select: () => this.setState({ showDemoProfiles: false, profile: "p1", view: "home", section: "home", canvas: "carryover", drill: [], messages: [{ role: "ai", text: "Hi, Danielle. How can I help you today?" }] }) },
         { initials: "GA", photo: "uploads/AccountsPayablePic.png", name: "Sergio", role: "Accounts Payable", description: "Wants to understand his bill and make sure his aggregate data plan won't go over.", select: () => this.setState({ showDemoProfiles: false, profile: "p2", view: "home", section: "home", canvas: "carryover", drill: [], messages: [{ role: "ai", text: "HI Sergio. How can I help you today?" }] }) },
