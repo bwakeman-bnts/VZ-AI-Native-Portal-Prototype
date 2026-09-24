@@ -1796,7 +1796,7 @@ input,textarea{font-family:inherit}
       </div>
       <div style="padding:24px;display:flex;flex-direction:column;gap:8px">
         <h3 style="margin:0 0 4px;display:flex;align-items:center;gap:8px;font-size:22px;font-weight:700;letter-spacing:-.3px;color:#000"><img src="uploads/AISparkle.svg" alt="" style="width:20px;height:20px;display:block;flex:none">The AI Native Portal</h3>
-        <p style="margin: 0 0 8px; font-size: 18px; color: var(--vds-black); font-weight: 400">Danielle and Sergio both work for Cascade Logistics, a professional services company with roughly 150 lines. This personalized portal experience serves up content that is specific to their roles and needs.</p>
+        <p style="margin: 0 0 8px; font-size: 18px; color: var(--vds-black); font-weight: 400">These personas all work for Cascade Logistics, a professional services company with roughly 150 lines. This personalized portal experience serves up content that is specific to their roles and needs.</p>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
           <sc-for list="{{ demoProfiles }}" as="p" hint-placeholder-count="4">
             <button onClick="{{ p.select }}" style="text-align:left;display:flex;flex-direction:column;gap:12px;border:1px solid var(--vds-border-default);border-radius:8px;padding:18px;background:var(--vds-stone);cursor:pointer" style-hover="border-color:#000">
@@ -2984,7 +2984,7 @@ class Component extends DCLogic {
         deviceCount: "4 devices",
       },
       activateAllDevices: () => this.setState({ activationConfirmed: true }, () => this.scrollToEl("activation-success")),
-      activationEmail: ((s.profile || "p1") === "p2" ? "sergio" : "danielle") + "@cascadelogistics.com",
+      activationEmail: PERSONA.activationEmailUser + "@cascadelogistics.com",
       askCompareFeatures: () => this.setState({ techFeaturesLoading: true }, () => { this.scrollToEl("tech-features-section"); setTimeout(() => this.setState({ techFeaturesLoading: false, techFeaturesShown: true }), 900); }),
       askTotalCost: () => this.push("Total cost over 36 months"),
       askOrder12: () => this.push("What if I order 12 now?"),
@@ -3030,13 +3030,6 @@ class Component extends DCLogic {
       openDemoProfiles: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ showDemoProfiles: true }); },
       closeDemoProfiles: () => this.setState({ showDemoProfiles: false }),
       stopPropagation: (e) => { if (e && e.stopPropagation) e.stopPropagation(); },
-      isP1: (s.profile || "p1") === "p1",
-      isP2: s.profile === "p2",
-      isP3: s.profile === "p3",
-      shopSpanCol: (s.profile || "p1") === "p1" ? "span 3" : "span 1",
-      shopSpanRow: (s.profile || "p1") === "p1" ? "span 2" : "span 1",
-      billingSpanCol: s.profile === "p2" ? "span 3" : "span 1",
-      billingSpanRow: s.profile === "p2" ? "span 2" : "span 1",
       persona: PERSONA,
       hasGreeting: PERSONA_WIDGETS.indexOf("greeting") !== -1,
       hasLeadOfferHero: PERSONA_WIDGETS.indexOf("leadOfferHero") !== -1,
@@ -3045,10 +3038,13 @@ class Component extends DCLogic {
       hasEscalateCard: PERSONA_WIDGETS.indexOf("escalateCard") !== -1,
       hasSecurityStatsGrid: PERSONA_WIDGETS.indexOf("securityStatsGrid") !== -1,
       hasBillingStatsGrid: PERSONA_WIDGETS.indexOf("billingStatsGrid") !== -1,
-      demoProfiles: [
-        { initials: "AR", photo: "uploads/ITManagerPic.png", name: "Danielle", role: "IT Manager", description: "Reviewing new devices \u2014 wants to make sure they're getting the best terms.", select: () => this.setState({ showDemoProfiles: false, profile: "p1", view: "home", section: "home", canvas: "carryover", drill: [], messages: [{ role: "ai", text: "Hi, Danielle. How can I help you today?" }] }) },
-        { initials: "GA", photo: "uploads/AccountsPayablePic.png", name: "Sergio", role: "Accounts Payable", description: "Wants to understand his bill and make sure his aggregate data plan won't go over.", select: () => this.setState({ showDemoProfiles: false, profile: "p2", view: "home", section: "home", canvas: "carryover", drill: [], messages: [{ role: "ai", text: "HI Sergio. How can I help you today?" }] }) },
-      ].map((p) => ({ ...p, showInitials: !p.photo }))
+      demoProfiles: (window.PERSONA_ORDER || Object.keys(window.PERSONAS)).map((id) => {
+        const p = window.PERSONAS[id];
+        return {
+          initials: p.initials, photo: p.photo, name: p.name, role: p.role, description: p.pickerDescription,
+          select: () => this.setState({ showDemoProfiles: false, profile: id, view: "home", section: "home", canvas: "carryover", drill: [], messages: [{ role: "ai", text: p.welcomeMessage }] })
+        };
+      }).map((p) => ({ ...p, showInitials: !p.photo }))
     };
   }
 }

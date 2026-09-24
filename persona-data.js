@@ -56,3 +56,4 @@ window.PERSONAS = {
 };
 
 window.PERSONA_DEFAULT = "p1";
+window.PERSONA_ORDER = ["p1", "p2", "p3"];
