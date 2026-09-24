@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="_ds/verizon-business-design-system-4f8be1bd-7c8c-4701-9725-61efe2128025/ui_kits/vbg-marketing/styles.css">
 <script src="_ds/verizon-business-design-system-4f8be1bd-7c8c-4701-9725-61efe2128025/_ds_bundle.js"></script>
 <script src="./image-slot.js"></script>
+<script src="./persona-data.js"></script>
 <style>
 html,body{margin:0;padding:0;background:#fff;font-family:"Verizon NHG eDS","Arial",sans-serif;color:#000}
 *{box-sizing:border-box}
@@ -224,13 +225,13 @@ input,textarea{font-family:inherit}
       <div style="flex:1;min-width:0;overflow-y:auto">
         <div style="padding:0 0 40px;background:var(--vds-stone);display:flex;flex-direction:column">
 
-          <sc-if value="{{ isP1 }}" hint-placeholder-val="{{ true }}">
+          <sc-if value="{{ hasGreeting }}" hint-placeholder-val="{{ true }}">
           <div style="padding:24px 40px 0">
-            <h1 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.3px; color: #000">Good morning, Danielle</h1>
+            <h1 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.3px; color: #000">{{ persona.greeting }}</h1>
           </div>
           </sc-if>
 
-          <sc-if value="{{ isP1 }}" hint-placeholder-val="{{ true }}">
+          <sc-if value="{{ hasLeadOfferHero }}" hint-placeholder-val="{{ true }}">
           <section style="padding:34px 40px 12px;box-sizing:border-box;display:flex;flex-direction:column;gap:24px">
             <div style="view-transition-name: vt-resume-comparison; border: 1px solid var(--vds-border-subtle); border-radius: 8px; box-shadow: var(--vds-shadow-tile); padding: 36px; box-sizing: border-box; display: grid; grid-template-columns: minmax(260px,360px) minmax(0,1fr); gap: 40px; align-items: center; background-color: var(--vds-white)">
               <div style="display:flex;flex-direction:column;gap:12px">
@@ -303,13 +304,7 @@ input,textarea{font-family:inherit}
           </section>
           </sc-if>
 
-          <sc-if value="{{ isP2 }}" hint-placeholder-val="{{ false }}">
-          <div style="padding:24px 40px 0">
-            <h1 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -.3px; color: #000">Good afternoon, Sergio</h1>
-          </div>
-          </sc-if>
-
-          <sc-if value="{{ isP2 }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ hasBillBreakdownHero }}" hint-placeholder-val="{{ false }}">
           <section style="padding:34px 40px 12px;box-sizing:border-box;display:flex;flex-direction:column;gap:24px">
             <div style="view-transition-name: vt-bill-breakdown; border: 1px solid var(--vds-border-subtle); border-radius: 8px; box-shadow: var(--vds-shadow-tile); padding: 36px; box-sizing: border-box; display: grid; grid-template-columns: minmax(260px,360px) minmax(0,1fr); gap: 40px; align-items: center; background-color: var(--vds-white)">
             <div style="display:flex;flex-direction:column;gap:12px">
@@ -442,7 +437,7 @@ input,textarea{font-family:inherit}
           </section>
           </sc-if>
 
-          <sc-if value="{{ isP3 }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ hasFleetHealthHero }}" hint-placeholder-val="{{ false }}">
           <section style="border-top:1px solid var(--vds-border-subtle);padding:34px 40px 12px;box-sizing:border-box;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:24px;align-items:stretch">
             <div style="view-transition-name:vt-calls-to-a-rep;border:1px solid var(--vds-border-subtle);border-radius:8px;background:var(--vds-stone);box-shadow:var(--vds-shadow-tile);padding:36px;box-sizing:border-box;display:flex;flex-direction:column;gap:28px">
             <div style="display:flex;flex-direction:column;gap:12px">
@@ -470,7 +465,7 @@ input,textarea{font-family:inherit}
           </section>
           </sc-if>
 
-          <sc-if value="{{ isP3 }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ hasEscalateCard }}" hint-placeholder-val="{{ false }}">
           <section style="padding:12px 40px 34px">
            <div style="border:1px solid var(--vds-border-subtle);border-radius:8px;background:var(--vds-stone);box-shadow:var(--vds-shadow-tile);display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
             <a href="#" onClick="{{ handOverEscalation }}" style="padding:26px 40px;display:flex;flex-direction:column;gap:2px;text-decoration:none;color:#000;background:#fff" style-hover="background:var(--vds-background-lowcontrast)">
@@ -481,7 +476,7 @@ input,textarea{font-family:inherit}
           </section>
           </sc-if>
 
-          <sc-if value="{{ isP1 }}" hint-placeholder-val="{{ true }}">
+          <sc-if value="{{ hasSecurityStatsGrid }}" hint-placeholder-val="{{ true }}">
           <section style="padding:12px 40px 34px">
            <h2 style="margin:0 0 16px;display:flex;align-items:center;gap:8px;font-size:20px;font-weight:700;letter-spacing:-.3px;color:#000"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>Account Stats</h2>
            <div style="display:flex;flex-wrap:wrap;gap:12px">
@@ -504,7 +499,7 @@ input,textarea{font-family:inherit}
           </section>
           </sc-if>
 
-          <sc-if value="{{ isP2 }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ hasBillingStatsGrid }}" hint-placeholder-val="{{ false }}">
           <section style="padding:12px 40px 34px">
            <h2 style="margin:0 0 16px;display:flex;align-items:center;gap:8px;font-size:20px;font-weight:700;letter-spacing:-.3px;color:#000"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>Account Stats</h2>
            <div style="display:flex;flex-wrap:wrap;gap:12px">
@@ -1801,7 +1796,7 @@ input,textarea{font-family:inherit}
       </div>
       <div style="padding:24px;display:flex;flex-direction:column;gap:8px">
         <h3 style="margin:0 0 4px;display:flex;align-items:center;gap:8px;font-size:22px;font-weight:700;letter-spacing:-.3px;color:#000"><img src="uploads/AISparkle.svg" alt="" style="width:20px;height:20px;display:block;flex:none">The AI Native Portal</h3>
-        <p style="margin: 0 0 8px; font-size: 18px; color: var(--vds-black); font-weight: 400">Danielle and Sergio both work for Cascade Logistics, a professional services company with roughly 150 lines. This personalized portal experience serves up content that is specific to their roles and needs.</p>
+        <p style="margin: 0 0 8px; font-size: 18px; color: var(--vds-black); font-weight: 400">These personas all work for Cascade Logistics, a professional services company with roughly 150 lines. This personalized portal experience serves up content that is specific to their roles and needs.</p>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
           <sc-for list="{{ demoProfiles }}" as="p" hint-placeholder-count="4">
             <button onClick="{{ p.select }}" style="text-align:left;display:flex;flex-direction:column;gap:12px;border:1px solid var(--vds-border-default);border-radius:8px;padding:18px;background:var(--vds-stone);cursor:pointer" style-hover="border-color:#000">
@@ -2741,6 +2736,8 @@ class Component extends DCLogic {
     const crumb = SECTIONS[s.section] || SECTIONS.home;
     const cfg = SECTION_PAGES[s.section] || SECTION_PAGES.manage;
     const summary = SECTION_SUMMARY[s.section] || null;
+    const PERSONA = (window.PERSONAS && window.PERSONAS[s.profile]) || window.PERSONAS[window.PERSONA_DEFAULT];
+    const PERSONA_WIDGETS = PERSONA.canvas || [];
     return {
       tasksOpen: s.tasksOpen !== false,
       tasksChevron: s.tasksOpen !== false ? "rotate(0deg)" : "rotate(-90deg)",
@@ -2987,7 +2984,7 @@ class Component extends DCLogic {
         deviceCount: "4 devices",
       },
       activateAllDevices: () => this.setState({ activationConfirmed: true }, () => this.scrollToEl("activation-success")),
-      activationEmail: ((s.profile || "p1") === "p2" ? "sergio" : "danielle") + "@cascadelogistics.com",
+      activationEmail: PERSONA.activationEmailUser + "@cascadelogistics.com",
       askCompareFeatures: () => this.setState({ techFeaturesLoading: true }, () => { this.scrollToEl("tech-features-section"); setTimeout(() => this.setState({ techFeaturesLoading: false, techFeaturesShown: true }), 900); }),
       askTotalCost: () => this.push("Total cost over 36 months"),
       askOrder12: () => this.push("What if I order 12 now?"),
@@ -3033,17 +3030,21 @@ class Component extends DCLogic {
       openDemoProfiles: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ showDemoProfiles: true }); },
       closeDemoProfiles: () => this.setState({ showDemoProfiles: false }),
       stopPropagation: (e) => { if (e && e.stopPropagation) e.stopPropagation(); },
-      isP1: (s.profile || "p1") === "p1",
-      isP2: s.profile === "p2",
-      isP3: s.profile === "p3",
-      shopSpanCol: (s.profile || "p1") === "p1" ? "span 3" : "span 1",
-      shopSpanRow: (s.profile || "p1") === "p1" ? "span 2" : "span 1",
-      billingSpanCol: s.profile === "p2" ? "span 3" : "span 1",
-      billingSpanRow: s.profile === "p2" ? "span 2" : "span 1",
-      demoProfiles: [
-        { initials: "AR", photo: "uploads/ITManagerPic.png", name: "Danielle", role: "IT Manager", description: "Reviewing new devices \u2014 wants to make sure they're getting the best terms.", select: () => this.setState({ showDemoProfiles: false, profile: "p1", view: "home", section: "home", canvas: "carryover", drill: [], messages: [{ role: "ai", text: "Hi, Danielle. How can I help you today?" }] }) },
-        { initials: "GA", photo: "uploads/AccountsPayablePic.png", name: "Sergio", role: "Accounts Payable", description: "Wants to understand his bill and make sure his aggregate data plan won't go over.", select: () => this.setState({ showDemoProfiles: false, profile: "p2", view: "home", section: "home", canvas: "carryover", drill: [], messages: [{ role: "ai", text: "HI Sergio. How can I help you today?" }] }) },
-      ].map((p) => ({ ...p, showInitials: !p.photo }))
+      persona: PERSONA,
+      hasGreeting: PERSONA_WIDGETS.indexOf("greeting") !== -1,
+      hasLeadOfferHero: PERSONA_WIDGETS.indexOf("leadOfferHero") !== -1,
+      hasBillBreakdownHero: PERSONA_WIDGETS.indexOf("billBreakdownHero") !== -1,
+      hasFleetHealthHero: PERSONA_WIDGETS.indexOf("fleetHealthHero") !== -1,
+      hasEscalateCard: PERSONA_WIDGETS.indexOf("escalateCard") !== -1,
+      hasSecurityStatsGrid: PERSONA_WIDGETS.indexOf("securityStatsGrid") !== -1,
+      hasBillingStatsGrid: PERSONA_WIDGETS.indexOf("billingStatsGrid") !== -1,
+      demoProfiles: (window.PERSONA_ORDER || Object.keys(window.PERSONAS)).map((id) => {
+        const p = window.PERSONAS[id];
+        return {
+          initials: p.initials, photo: p.photo, name: p.name, role: p.role, description: p.pickerDescription,
+          select: () => this.setState({ showDemoProfiles: false, profile: id, view: "home", section: "home", canvas: "carryover", drill: [], messages: [{ role: "ai", text: p.welcomeMessage }] })
+        };
+      }).map((p) => ({ ...p, showInitials: !p.photo }))
     };
   }
 }
