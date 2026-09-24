@@ -1,0 +1,21 @@
+<sc-if value="{{ d.hasUsageRows }}">
+              <div style="border:1px solid var(--vds-border-subtle);border-radius:8px;background:#fff;overflow:hidden">
+                <div style="display:grid;grid-template-columns:1.3fr 1.5fr 1fr .9fr;gap:16px;padding:12px 20px;border-bottom:1px solid var(--vds-border-subtle);background:var(--vds-background-lowcontrast)">
+                  <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Line</span>
+                  <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">User</span>
+                  <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Device</span>
+                  <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Data used</span>
+                </div>
+                <sc-for list="{{ d.usageRows }}" as="u" hint-placeholder-count="5">
+                  <div style="display:grid;grid-template-columns:1.3fr 1.5fr 1fr .9fr;gap:16px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--vds-border-subtle)">
+                    <span style="font-size:14px;font-weight:700;color:#000">{{ u.line }}</span>
+                    <span style="font-size:14px;color:#000">{{ u.user }}</span>
+                    <span style="font-size:14px;color:var(--vds-element-secondary)">{{ u.device }}</span>
+                    <span style="display:flex;align-items:center;gap:8px">
+                      <span style="flex:none;width:7px;height:7px;border-radius:9999px;background: {{ u.dot }}"></span>
+                      <span style="font-size:13px;font-weight:700;color:#000;white-space:nowrap">{{ u.dataPct }}</span>
+                    </span>
+                  </div>
+                </sc-for>
+              </div>
+             </sc-if>

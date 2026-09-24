@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P3 · Billing, escalated — slot wireframe</title>
+<style>
+  :root {
+    color-scheme: light;
+    --ink: #1a1a1a; --ink-2: #555; --ink-3: #8a8a8a;
+    --line: #c8c8c8; --line-2: #e2e2e2;
+    --box: #f4f4f4; --box-2: #fafafa; --chip: #2b2b2b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 28px 24px 60px; background: #fff; color: var(--ink);
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+  .doc-head { border-bottom: 2px solid var(--ink); padding-bottom: 14px; margin-bottom: 8px; }
+  .doc-head h1 { margin: 0 0 4px; font-size: 19px; letter-spacing: -0.01em; }
+  .doc-head p { margin: 0; font-size: 12.5px; color: var(--ink-2); }
+  .state-hd { margin: 34px 0 0; padding: 11px 14px; background: var(--chip); color: #fff; }
+  .state-hd h2 { margin: 0; font-size: 14px; letter-spacing: 0.01em; }
+  .state-hd p { margin: 3px 0 0; font-size: 11.5px; color: #cfcfcf; }
+  .facts { display: flex; flex-wrap: wrap; gap: 0 26px; margin: 0 0 20px; padding: 12px 14px;
+    background: var(--box-2); border: 1px solid var(--line-2); border-top: none; font-size: 12px; }
+  .facts div { padding: 3px 0; }
+  .facts b { color: var(--ink-3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+    font-size: 10.5px; display: block; }
+  .facts .hot b { color: var(--ink); }
+  .facts .hot { font-weight: 700; }
+  .frame { border: 2px solid var(--ink); background: #fff; }
+  .chrome { display: flex; align-items: center; gap: 8px; padding: 9px 12px;
+    border-bottom: 1px solid var(--line); background: var(--box); }
+  .dot { width: 9px; height: 9px; border-radius: 50%; border: 1px solid var(--line); background: #fff; }
+  .url { flex: 1; margin-left: 6px; padding: 4px 9px; border: 1px solid var(--line);
+    background: #fff; font-size: 11px; color: var(--ink-3); }
+  .page { padding: 18px; }
+  .slot { position: relative; border: 1px dashed var(--line); background: var(--box-2); margin-bottom: 16px; }
+  .slot-hd { display: flex; align-items: baseline; gap: 9px; padding: 7px 11px;
+    border-bottom: 1px dashed var(--line-2); background: #fff; }
+  .tag { display: inline-block; padding: 2px 6px; background: var(--chip); color: #fff;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em; }
+  .slot-name { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; }
+  .slot-cap { font-size: 10.5px; color: var(--ink-3); margin-left: auto; }
+  .slot-body { padding: 13px 11px; }
+  .card { border: 1px solid var(--line); background: #fff; padding: 12px 13px; }
+  .cid { font-size: 10px; font-weight: 700; letter-spacing: 0.07em; color: var(--ink-3);
+    margin-bottom: 7px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .card h3 { margin: 0 0 6px; font-size: 15px; letter-spacing: -0.005em; }
+  .card p { margin: 0; font-size: 12.5px; color: var(--ink-2); }
+  .btn { display: inline-block; margin-top: 11px; padding: 7px 15px; border: 1.5px solid var(--ink);
+    background: #fff; font-size: 12px; font-weight: 600; }
+  .btn.solid { background: var(--ink); color: #fff; }
+  .lead { border: 2px solid var(--ink); padding: 20px; }
+  .lead h3 { font-size: 22px; margin-bottom: 9px; }
+  .lead p { font-size: 13.5px; color: var(--ink); }
+  .cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 11px; }
+  .rail { display: grid; grid-template-columns: 1fr 296px; gap: 16px; align-items: start; }
+  .assistant { border: 1px solid var(--ink); background: #fff; padding: 14px; }
+  .assistant .said { font-size: 14.5px; margin: 0 0 12px; }
+  .input { display: flex; align-items: center; justify-content: space-between;
+    border: 1px dashed var(--line); padding: 9px 11px; font-size: 12px; color: var(--ink-3); background: var(--box-2); }
+  .input.typed { border: 1.5px solid var(--ink); color: var(--ink); background: #fff; font-weight: 600; }
+  .strip-item { border: 1px solid var(--line-2); background: #fff; padding: 10px 11px; margin-bottom: 8px; }
+  .strip-item.first { border: 2px solid var(--ink); }
+  .strip-val { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+  .strip-lab { font-size: 11.5px; color: var(--ink-2); margin-top: 2px; }
+  .reason { background: #fff; border: 1px solid var(--line); border-left: 3px solid var(--ink); padding: 13px; }
+  .reason p { margin: 0 0 8px; font-size: 12.5px; }
+  .reason p:last-child { margin: 0; }
+  .esc { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+  .note { margin: 8px 0 0; padding: 9px 11px; border-left: 3px solid var(--ink-3);
+    background: var(--box); font-size: 11.5px; color: var(--ink-2); }
+  .note b { color: var(--ink); }
+  .note.loud { border-left-color: var(--ink); border-left-width: 4px; }
+  .route-mark { display: inline-block; margin-top: 9px; padding: 2px 6px; border: 1px solid var(--ink-3);
+    font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); }
+  .suppressed { margin-top: 22px; padding: 14px 16px; border: 1px dashed var(--line); background: var(--box-2); }
+  .suppressed.solid { border-style: solid; border-color: var(--ink); }
+  .suppressed h2 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.07em; }
+  .suppressed ul { margin: 0; padding-left: 18px; font-size: 12px; color: var(--ink-2); }
+  .suppressed li { margin-bottom: 5px; }
+  .delta { margin: 0 0 20px; padding: 13px 15px; border: 1px solid var(--line); background: #fff; }
+  .delta h3 { margin: 0 0 7px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; }
+  .delta ul { margin: 0 0 10px; padding-left: 18px; font-size: 12px; color: var(--ink-2); }
+  .delta ul:last-child { margin-bottom: 0; }
+  .legend { margin-top: 30px; font-size: 11.5px; color: var(--ink-3); }
+  .legend h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink); margin: 0 0 7px; }
+  .legend p { margin: 0 0 6px; }
+  @media (max-width: 820px) { .rail, .cols, .esc { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="doc-head">
+    <h1>P3 · Billing, escalated — slot wireframe</h1>
+    <p>Two states. Third contact, Hard risk signal, a failed self-serve attempt, Near cap on an Enterprise 200+ healthcare account. This is the suppression test. Copy from <i>Page Outlines — Three Test Profiles</i>.</p>
+  </div>
+
+  <!-- ============ STATE 1 ============ -->
+  <div class="state-hd">
+    <h2>State 1 · Base — no expressed request</h2>
+    <p>Fifteen commercial cards absent by rule. The human route reaches the Lead slot by a path nothing else in the workbook exercises.</p>
+  </div>
+  <div class="facts">
+    <div><b>Leading objective</b>Retain <span style="color:var(--ink-3)">(Retain + Complete fire; rank breaks the tie)</span></div>
+    <div><b>Active job</b>J3 — the escalation, gate 4</div>
+    <div><b>Standing jobs</b>J1 J5 J8</div>
+    <div class="hot"><b>Manner</b>ESCALATED — nothing is sold</div>
+    <div><b>Lead basis</b>Live</div>
+  </div>
+
+  <div class="frame">
+    <div class="chrome">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      <div class="url">verizon.com/business/account</div>
+    </div>
+    <div class="page">
+
+      <!-- S1 -->
+      <div class="slot">
+        <div class="slot-hd">
+          <span class="tag">S1</span><span class="slot-name">Assistant opening</span>
+          <span class="slot-cap">capacity 1 · always</span>
+        </div>
+        <div class="slot-body">
+          <div class="assistant">
+            <p class="said">“Your escalation from 4 September is still open, and it has been three contacts. I have the full history. I can put it in front of a person now, with everything already attached.”</p>
+            <div class="input"><span>Ask for anything…</span><span>↵</span></div>
+          </div>
+          <p class="note">The Escalated manner overrides the default fill rule: the opening <b>names the unresolved thing</b> rather than the lead card. Here the two nearly coincide, because the lead <i>is</i> the handover. No question mark, no offer, no product — the one thing this page can do is not make them explain it a fourth time.</p>
+        </div>
+      </div>
+
+      <div class="rail">
+        <div>
+
+          <!-- S2 -->
+          <div class="slot">
+            <div class="slot-hd">
+              <span class="tag">S2</span><span class="slot-name">Lead</span>
+              <span class="slot-cap">capacity 1 · always</span>
+            </div>
+            <div class="slot-body">
+              <div class="card lead">
+                <div class="cid">J9-05 · SEND MY CONTEXT TO A HUMAN</div>
+                <h3>Send this to a person, with everything attached</h3>
+                <p>Your ticket, the three previous contacts, and this session. They will have read it before they speak to you.</p>
+                <span class="btn solid">Hand this over</span>
+              </div>
+              <p class="note loud"><b>Gate 5 is the interesting one.</b> J9 is <i>active-only</i> for Billing on the Role Map, and no J9 signal fires — the escalation makes J3 active, not J9. So this card fails job match and the ranking cannot promote it at all. It reaches the Lead slot <b>only through the Manner block</b> (“the human route leads”). That means Manner is not a modifier on the ranking — it is a second, parallel promotion mechanism, and the Slots tab does not say so.</p>
+            </div>
+          </div>
+
+          <!-- S3 -->
+          <div class="slot">
+            <div class="slot-hd">
+              <span class="tag">S3</span><span class="slot-name">Support</span>
+              <span class="slot-cap">capacity 3 · stays at 3 under Escalated</span>
+            </div>
+            <div class="slot-body">
+              <div class="cols">
+                <div class="card">
+                  <div class="cid">J9-06</div>
+                  <h3>Straight through, not into the queue</h3>
+                  <p>Routed ahead of the line because of how long this has been open.</p>
+                  <span class="route-mark">route card</span>
+                </div>
+                <div class="card">
+                  <div class="cid">J1-03</div>
+                  <h3>What this charge is</h3>
+                  <p>In plain language, with the line item it came from.</p>
+                </div>
+                <div class="card">
+                  <div class="cid">J5-05</div>
+                  <h3>Get told before it costs anything</h3>
+                  <p>You are close to your allowance. We can warn you at 80 percent instead of after.</p>
+                </div>
+              </div>
+              <p class="note">Support depth holds at three — the Slots tab drops it to one only under <i>Impatient</i>. <b>J5-05 is the card to argue about:</b> protective rather than commercial and it scores Retain 3, so it is admissible, but adding a task to the page of someone on their third contact may read as deflection. <b>J3-05 Escalate</b> also scores Retain 3 and passes its precondition; I left it out deliberately — see the route-card problem below.</p>
+            </div>
+          </div>
+
+          <!-- S5 -->
+          <div class="slot">
+            <div class="slot-hd">
+              <span class="tag">S5</span><span class="slot-name">Reasoning</span>
+              <span class="slot-cap">capacity 1 · always · weight follows lead basis</span>
+            </div>
+            <div class="slot-body">
+              <div class="reason">
+                <p><b>Why you are seeing this</b></p>
+                <p>There is an open escalation on this account and it is past its target. Until it is resolved, this page will not offer you anything to buy.</p>
+              </div>
+              <p class="note loud">Short, because there is nothing to hedge — the lead is live basis and the escalation is a fact, not an inference. <b>But the confidence rule wants examining.</b> “Live, strong signal” licenses replacing the whole page including navigation. For a churn-risk save page (Ben, 3 Sept — <i>nothing to lose</i>) that is right. For someone on their third contact about a billing problem, removing the navigation they have been using to chase it may be exactly wrong. This profile is the case that separates <i>high confidence</i> from <i>licence to rebuild the page</i>, and the two may need decoupling.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div>
+
+          <!-- S4 -->
+          <div class="slot">
+            <div class="slot-hd">
+              <span class="tag">S4</span><span class="slot-name">Status strip</span>
+              <span class="slot-cap">3 · always</span>
+            </div>
+            <div class="slot-body">
+              <div class="strip-item first">
+                <div class="cid">J3-01</div>
+                <div class="strip-val">Open 6 days</div>
+                <div class="strip-lab">3 contacts · owned by T. Reyes</div>
+              </div>
+              <div class="strip-item">
+                <div class="cid">J1-02</div>
+                <div class="strip-val">+$1,840</div>
+                <div class="strip-lab">above last cycle</div>
+              </div>
+              <div class="strip-item">
+                <div class="cid">J5-01</div>
+                <div class="strip-val">91% of allowance</div>
+                <div class="strip-lab">and rising</div>
+              </div>
+              <p class="note">J3-01's strength is age × number of contacts — the largest quantity on this page. Its own note, <i>vetoes the commercial cards above it</i>, is the mechanism doing most of the work here. <b>J5-02 Overage posted</b> fails its precondition: usage is Near cap, not Over, so nothing has posted.</p>
+            </div>
+          </div>
+
+          <!-- S6 -->
+          <div class="slot">
+            <div class="slot-hd">
+              <span class="tag">S6</span><span class="slot-name">Escape</span>
+              <span class="slot-cap">2 · always · never vetoed</span>
+            </div>
+            <div class="slot-body">
+              <div class="esc">
+                <div class="card">
+                  <div class="cid">EXPLORE</div>
+                  <h3>Everything else</h3>
+                </div>
+                <div class="card">
+                  <div class="cid">J9-01</div>
+                  <h3>Your rep</h3>
+                  <p>T. Reyes</p>
+                  <span class="route-mark">route card</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="suppressed">
+    <h2>Absent from this page, and why</h2>
+    <ul>
+      <li><b>Every J4 card (8) and every J10 card (7)</b> — zero under Retain by rule. Absent, not ranked low. <i>Do not sell past a problem.</i> The Test Profiles tab says “fourteen at zero”; the Cards tab holds fifteen.</li>
+      <li><b>Every remaining commercial card</b> — suppressed by the Escalated manner regardless of objective score. This catches <b>J5-07 Change a plan</b> (Retain 3), <b>J2-10 Set up a package</b> and <b>J12-02 Start an integration</b>, all of which would otherwise be in contention.</li>
+      <li><b>J1-11 What we can do to keep you</b> — Retain 3, and the one offer-shaped card exempt from the Retain veto as a retention instrument. Suppressed here anyway, because Manner zeroes <i>every</i> commercial card and the Vetoes tab writes that exemption against the Retain rule, not against Manner. <b>Worth confirming that reading</b> — an offer at third contact is a gamble either way.</li>
+      <li><b>J3-08 Keep running while it is down</b> — precondition fails. No incident affects a site on this account.</li>
+    </ul>
+  </div>
+
+  <div class="suppressed solid">
+    <h2>The route-card problem — only this profile exposes it</h2>
+    <ul>
+      <li>Four route cards are in contention on one page: <b>J9-05</b> (Lead, via Manner), <b>J9-06</b> (Support), <b>J3-05 Escalate</b> (Support-eligible, Retain 3) and <b>J9-01</b> (Escape, unvetoable).</li>
+      <li>Nothing in the Slots tab stops three appearing at once. The only de-dup rule is S3's “may not repeat the lead's job more than once,” and J3-05 is a J3 card, so it does not collide with a J9 lead.</li>
+      <li>A page offering an escalated customer three different humans is worse than one offering a single obvious one. <b>This needs a rule.</b></li>
+    </ul>
+  </div>
+
+  <!-- ============ STATE 2 ============ -->
+  <div class="state-hd">
+    <h2>State 2 · Thirty seconds later — “I need to dispute this charge”</h2>
+    <p>Gate 3 fires. An expressed request is checked before the objective is applied and beats every inferred signal on the sheet.</p>
+  </div>
+  <div class="facts">
+    <div class="hot"><b>Active job</b>J1 — named outright, gate 3</div>
+    <div><b>Leading objective</b>Retain <span style="color:var(--ink-3)">(unchanged)</span></div>
+    <div><b>Manner</b>ESCALATED <span style="color:var(--ink-3)">(unchanged)</span></div>
+    <div><b>Lead basis</b>Live · confirmed intent</div>
+  </div>
+
+  <div class="delta">
+    <h3>What changes</h3>
+    <ul>
+      <li>Active job becomes <b>J1</b>, named rather than inferred.</li>
+      <li><b>J1-06 Dispute a charge</b> takes the Lead slot outright. Authority <i>Approve</i> — and this profile has <i>Can approve</i>, so gate 2 passes cleanly. This is the only one of the four page states where the authority model works without an assumption.</li>
+      <li><b>J9-05 demotes from Lead to Support.</b> Still close, Manner still applies, but a confirmed request outranks a manner-driven promotion.</li>
+    </ul>
+    <h3>What does not change</h3>
+    <ul>
+      <li>The objective stays <b>Retain</b> — nothing in the request touches Risk or Open issue.</li>
+      <li>The escalation stays in slot 1 of the status strip.</li>
+      <li>Commercial stays suppressed. A dispute is not a buying signal.</li>
+    </ul>
+  </div>
+
+  <div class="frame">
+    <div class="chrome">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      <div class="url">verizon.com/business/account</div>
+    </div>
+    <div class="page">
+
+      <!-- S1 -->
+      <div class="slot">
+        <div class="slot-hd">
+          <span class="tag">S1</span><span class="slot-name">Assistant opening</span>
+          <span class="slot-cap">capacity 1 · always · gate 3 input surface</span>
+        </div>
+        <div class="slot-body">
+          <div class="assistant">
+            <div class="input typed" style="margin-bottom:12px"><span>“I need to dispute this charge”</span><span>↵</span></div>
+            <p class="said" style="margin:0">“Let's dispute it. Which charge — the $1,840 increase this cycle, or something on a specific line?”</p>
+          </div>
+          <p class="note">This is the only state in which gate 3 is exercised at all, which makes it the most important of the four to build — and it depends on <b>AS4 / concierge</b>, a confirmed gap.</p>
+        </div>
+      </div>
+
+      <div class="rail">
+        <div>
+
+          <!-- S2 -->
+          <div class="slot">
+            <div class="slot-hd">
+              <span class="tag">S2</span><span class="slot-name">Lead</span>
+              <span class="slot-cap">capacity 1 · taken outright by gate 3</span>
+            </div>
+            <div class="slot-body">
+              <div class="card lead">
+                <div class="cid">J1-06 · DISPUTE A CHARGE</div>
+                <h3>Dispute this charge</h3>
+                <p>We will attach your bill, the line item and your open ticket. You have 14 days left in the window on this cycle.</p>
+                <span class="btn solid">Start the dispute</span>
+              </div>
+              <p class="note">Strength: disputed amount ÷ baseline bill, and days left in the window. Precondition: a charge inside the dispute window and not already disputed.</p>
+            </div>
+          </div>
+
+          <!-- S3 -->
+          <div class="slot">
+            <div class="slot-hd">
+              <span class="tag">S3</span><span class="slot-name">Support</span>
+              <span class="slot-cap">capacity 3 · max one J1 repeat</span>
+            </div>
+            <div class="slot-body">
+              <div class="cols">
+                <div class="card">
+                  <div class="cid">J1-03</div>
+                  <h3>What this charge is</h3>
+                  <p>In plain language, with the line item it came from.</p>
+                </div>
+                <div class="card">
+                  <div class="cid">J9-05</div>
+                  <h3>Send this to a person</h3>
+                  <p>Demoted from the lead. Everything still attached.</p>
+                  <span class="route-mark">route card</span>
+                </div>
+                <div class="card">
+                  <div class="cid">J5-05</div>
+                  <h3>Get told before it costs anything</h3>
+                  <p>Unchanged from the base state.</p>
+                </div>
+              </div>
+              <p class="note loud"><b>This is where the S3 repeat rule bites.</b> A dispute needs evidence beside it — <b>J1-10 Payment history</b> and <b>J1-02 What changed this cycle</b> are both the obvious companions, and both are J1. The rule permits only one J1 support card, so the page cannot assemble the evidence its own lead action requires. J1-02 survives only because it is Status-type and lands in the strip instead. <b>The rule needs an exception for cards that supply evidence for the lead action — or the repeat limit needs raising when the lead came from gate 3 rather than an inference.</b> Nothing else in the workbook surfaces this.</p>
+            </div>
+          </div>
+
+          <!-- S5 -->
+          <div class="slot">
+            <div class="slot-hd">
+              <span class="tag">S5</span><span class="slot-name">Reasoning</span>
+              <span class="slot-cap">capacity 1 · always</span>
+            </div>
+            <div class="slot-body">
+              <div class="reason">
+                <p><b>Why you are seeing this</b></p>
+                <p>You asked to dispute a charge, so that is what this page is for. Your open escalation is still showing above, because this does not resolve it.</p>
+              </div>
+              <p class="note">A question outranks every inference — <b>and it does not let the page forget what is wrong.</b> That second clause is the whole test.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div>
+
+          <!-- S4 -->
+          <div class="slot">
+            <div class="slot-hd">
+              <span class="tag">S4</span><span class="slot-name">Status strip</span>
+              <span class="slot-cap">3 · unchanged</span>
+            </div>
+            <div class="slot-body">
+              <div class="strip-item first">
+                <div class="cid">J3-01</div>
+                <div class="strip-val">Open 6 days</div>
+                <div class="strip-lab">3 contacts · owned by T. Reyes</div>
+              </div>
+              <div class="strip-item">
+                <div class="cid">J1-02</div>
+                <div class="strip-val">+$1,840</div>
+                <div class="strip-lab">above last cycle</div>
+              </div>
+              <div class="strip-item">
+                <div class="cid">J5-01</div>
+                <div class="strip-val">91% of allowance</div>
+                <div class="strip-lab">and rising</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- S6 -->
+          <div class="slot">
+            <div class="slot-hd">
+              <span class="tag">S6</span><span class="slot-name">Escape</span>
+              <span class="slot-cap">2 · unchanged</span>
+            </div>
+            <div class="slot-body">
+              <div class="esc">
+                <div class="card">
+                  <div class="cid">EXPLORE</div>
+                  <h3>Everything else</h3>
+                </div>
+                <div class="card">
+                  <div class="cid">J9-01</div>
+                  <h3>Your rep</h3>
+                  <p>T. Reyes</p>
+                  <span class="route-mark">route card</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <h2>Reading this wireframe</h2>
+    <p><b>Slot order is not page order.</b> The Slots tab defines six slots and their fill rules, not their positions. Placing S4 and S6 in a right rail is an interpretation — the arrangement is what to argue with, the fills are what the matrix determines.</p>
+    <p><b>Absence is not low rank.</b> Gates 1–4 remove cards entirely. Nothing listed as absent sits at the bottom of the page; it does not exist for this visit.</p>
+    <p>Thin outline marks a route card, to make the route-card problem countable. Copy is draft; figures are illustrative.</p>
+  </div>
+
+</div>
+</body>
+</html>

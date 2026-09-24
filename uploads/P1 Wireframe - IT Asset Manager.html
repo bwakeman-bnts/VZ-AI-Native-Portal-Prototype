@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>P1 · IT asset manager — slot wireframe</title>
+<style>
+  :root {
+    color-scheme: light;
+    --ink: #1a1a1a;
+    --ink-2: #555;
+    --ink-3: #8a8a8a;
+    --line: #c8c8c8;
+    --line-2: #e2e2e2;
+    --box: #f4f4f4;
+    --box-2: #fafafa;
+    --chip: #2b2b2b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 28px 24px 60px;
+    background: #fff;
+    color: var(--ink);
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+
+  /* ---------- header ---------- */
+  .doc-head { border-bottom: 2px solid var(--ink); padding-bottom: 14px; margin-bottom: 8px; }
+  .doc-head h1 { margin: 0 0 4px; font-size: 19px; letter-spacing: -0.01em; }
+  .doc-head p { margin: 0; font-size: 12.5px; color: var(--ink-2); }
+  .facts {
+    display: flex; flex-wrap: wrap; gap: 0 26px;
+    margin: 14px 0 26px; padding: 12px 14px;
+    background: var(--box-2); border: 1px solid var(--line-2);
+    font-size: 12px;
+  }
+  .facts div { padding: 3px 0; }
+  .facts b { color: var(--ink-3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; font-size: 10.5px; display: block; }
+
+  /* ---------- browser chrome ---------- */
+  .frame { border: 2px solid var(--ink); background: #fff; }
+  .chrome {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 12px; border-bottom: 1px solid var(--line);
+    background: var(--box);
+  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; border: 1px solid var(--line); background: #fff; }
+  .url {
+    flex: 1; margin-left: 6px; padding: 4px 9px;
+    border: 1px solid var(--line); background: #fff;
+    font-size: 11px; color: var(--ink-3);
+  }
+  .page { padding: 18px; }
+
+  /* ---------- slot scaffolding ---------- */
+  .slot { position: relative; border: 1px dashed var(--line); background: var(--box-2); margin-bottom: 16px; }
+  .slot-hd {
+    display: flex; align-items: baseline; gap: 9px;
+    padding: 7px 11px; border-bottom: 1px dashed var(--line-2);
+    background: #fff;
+  }
+  .tag {
+    display: inline-block; padding: 2px 6px;
+    background: var(--chip); color: #fff;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+  }
+  .slot-name { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; }
+  .slot-cap { font-size: 10.5px; color: var(--ink-3); margin-left: auto; }
+  .slot-body { padding: 13px 11px; }
+
+  /* ---------- cards ---------- */
+  .card { border: 1px solid var(--line); background: #fff; padding: 12px 13px; }
+  .cid {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.07em;
+    color: var(--ink-3); margin-bottom: 7px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .card h3 { margin: 0 0 6px; font-size: 15px; letter-spacing: -0.005em; }
+  .card p { margin: 0; font-size: 12.5px; color: var(--ink-2); }
+  .btn {
+    display: inline-block; margin-top: 11px; padding: 7px 15px;
+    border: 1.5px solid var(--ink); background: #fff;
+    font-size: 12px; font-weight: 600;
+  }
+
+  /* lead is the loud one */
+  .lead { border: 2px solid var(--ink); padding: 20px; }
+  .lead h3 { font-size: 22px; margin-bottom: 9px; }
+  .lead p { font-size: 13.5px; color: var(--ink); }
+
+  .cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 11px; }
+  .rail { display: grid; grid-template-columns: 1fr 296px; gap: 16px; align-items: start; }
+
+  /* assistant opening */
+  .assistant { border: 1px solid var(--ink); background: #fff; padding: 14px; }
+  .assistant .said { font-size: 14.5px; margin: 0 0 12px; }
+  .input {
+    display: flex; align-items: center; justify-content: space-between;
+    border: 1px dashed var(--line); padding: 9px 11px;
+    font-size: 12px; color: var(--ink-3); background: var(--box-2);
+  }
+
+  /* status strip */
+  .strip-item { border: 1px solid var(--line-2); background: #fff; padding: 10px 11px; margin-bottom: 8px; }
+  .strip-item:last-child { margin-bottom: 0; }
+  .strip-val { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+  .strip-lab { font-size: 11.5px; color: var(--ink-2); margin-top: 2px; }
+
+  /* reasoning */
+  .reason { border-left: 3px solid var(--ink); background: #fff; border: 1px solid var(--line); border-left-width: 3px; padding: 13px; }
+  .reason p { margin: 0 0 8px; font-size: 12.5px; }
+  .reason .prov { margin: 0; font-size: 11.5px; color: var(--ink-3); font-style: italic; }
+
+  /* escape */
+  .esc { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+
+  /* ---------- notes ---------- */
+  .note {
+    margin: 8px 0 0; padding: 9px 11px;
+    border-left: 3px solid var(--ink-3); background: var(--box);
+    font-size: 11.5px; color: var(--ink-2);
+  }
+  .note b { color: var(--ink); }
+  .suppressed {
+    margin-top: 22px; padding: 14px 16px;
+    border: 1px dashed var(--line); background: var(--box-2);
+  }
+  .suppressed h2 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.07em; }
+  .suppressed ul { margin: 0; padding-left: 18px; font-size: 12px; color: var(--ink-2); }
+  .suppressed li { margin-bottom: 5px; }
+  .legend { margin-top: 26px; font-size: 11.5px; color: var(--ink-3); }
+  .legend h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink); margin: 0 0 7px; }
+  .legend p { margin: 0 0 6px; }
+  @media (max-width: 820px) {
+    .rail, .cols, .esc { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="doc-head">
+    <h1>P1 · IT asset manager — slot wireframe</h1>
+    <p>Grey-box layout of the six slots for test profile P1. Copy is drawn from <i>Page Outlines — Three Test Profiles</i>. Slot boundaries are dashed; card boundaries are solid.</p>
+  </div>
+
+  <div class="facts">
+    <div><b>Leading objective</b>Shift <span style="color:var(--ink-3)">(Shift + Complete fire; rank breaks the tie)</span></div>
+    <div><b>Active job</b>J4 — recent device search, gate 4</div>
+    <div><b>Standing jobs</b>J2 J3 J6 J7 J10 J11 J12</div>
+    <div><b>Manner</b>Neutral — nothing changes</div>
+    <div><b>Lead basis</b>Account</div>
+  </div>
+
+  <div class="frame">
+    <div class="chrome">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      <div class="url">verizon.com/business/account</div>
+    </div>
+
+    <div class="page">
+
+      <!-- S1 -->
+      <div class="slot">
+        <div class="slot-hd">
+          <span class="tag">S1</span>
+          <span class="slot-name">Assistant opening</span>
+          <span class="slot-cap">capacity 1 · always</span>
+        </div>
+        <div class="slot-body">
+          <div class="assistant">
+            <p class="said">“You were looking at devices earlier. Before you order, your account has negotiated pricing — here is what you actually pay.”</p>
+            <div class="input">
+              <span>Ask for anything…</span>
+              <span>↵</span>
+            </div>
+          </div>
+          <p class="note">Also the input surface. Anything typed here fires <b>gate 3</b>, sets the active job and reassigns S2 outright. Empty on arrival for P1 — no expressed request.</p>
+        </div>
+      </div>
+
+      <div class="rail">
+        <!-- main column -->
+        <div>
+
+          <!-- S2 -->
+          <div class="slot">
+            <div class="slot-hd">
+              <span class="tag">S2</span>
+              <span class="slot-name">Lead</span>
+              <span class="slot-cap">capacity 1 · always</span>
+            </div>
+            <div class="slot-body">
+              <div class="card lead">
+                <div class="cid">J4-05 · NEGOTIATED RATES</div>
+                <h3>Your negotiated pricing, visible here</h3>
+                <p>This account has rates below list on devices and plans. Every order you place through a rep uses these same rates — you can see them and order against them here.</p>
+                <span class="btn">See your rates</span>
+              </div>
+              <p class="note">Strength: value of orders still placed offline ÷ baseline bill. 55% of billed lines still assisted on a Large 100–199 account, which is what wins the slot over the other Shift 3 cards.</p>
+            </div>
+          </div>
+
+          <!-- S3 -->
+          <div class="slot">
+            <div class="slot-hd">
+              <span class="tag">S3</span>
+              <span class="slot-name">Support</span>
+              <span class="slot-cap">capacity 3 · conditional · max one J4 repeat</span>
+            </div>
+            <div class="slot-body">
+              <div class="cols">
+                <div class="card">
+                  <div class="cid">J10-05</div>
+                  <h3>The three things you call about, in two clicks</h3>
+                  <p>Line activations, device orders and plan changes all went through a rep last quarter. Each one has a path here.</p>
+                </div>
+                <div class="card">
+                  <div class="cid">J4-01</div>
+                  <h3>Pick up where you left off</h3>
+                  <p>The four devices you compared, now priced at your rates.</p>
+                </div>
+                <div class="card">
+                  <div class="cid">J2-02</div>
+                  <h3>Order and ship to a person or site</h3>
+                  <p>Straight to whoever needs it. No approval step for you.</p>
+                  <span class="btn">Order</span>
+                </div>
+              </div>
+              <p class="note"><b>J10-05 is blocked on DS8</b> (channel history), a confirmed gap. Until it lands this slot has no signal behind it. <b>J2-01 Activate a line</b> is the alternate and displaces J2-02 if Complete leads instead.</p>
+            </div>
+          </div>
+
+          <!-- S5 -->
+          <div class="slot">
+            <div class="slot-hd">
+              <span class="tag">S5</span>
+              <span class="slot-name">Reasoning</span>
+              <span class="slot-cap">capacity 1 · always · weight follows lead basis</span>
+            </div>
+            <div class="slot-body">
+              <div class="reason">
+                <p><b>Why you are seeing this</b></p>
+                <p>You searched the device catalog this week, and 55 percent of your billed lines still transact through a rep. Your account has negotiated rates that are visible and usable here. That is the whole argument.</p>
+                <p class="prov">Based on your account and this session. Not on what similar businesses do.</p>
+              </div>
+              <p class="note">Lead basis is <b>Account</b>, so full weight and no provisional marker. Per S5's rule, lead and support may change on this page; the status strip holds.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- right rail -->
+        <div>
+
+          <!-- S4 -->
+          <div class="slot">
+            <div class="slot-hd">
+              <span class="tag">S4</span>
+              <span class="slot-name">Status strip</span>
+              <span class="slot-cap">3 · always</span>
+            </div>
+            <div class="slot-body">
+              <div class="strip-item">
+                <div class="cid">J6-05</div>
+                <div class="strip-val">12 devices</div>
+                <div class="strip-lab">due for upgrade</div>
+              </div>
+              <div class="strip-item">
+                <div class="cid">J6-02</div>
+                <div class="strip-val">147 devices</div>
+                <div class="strip-lab">9 unassigned</div>
+              </div>
+              <div class="strip-item">
+                <div class="cid">J6-08</div>
+                <div class="strip-val">3 product lines</div>
+                <div class="strip-lab">Mobility, FWA, security</div>
+              </div>
+              <p class="note">Status-type cards only, ranked. <b>Ignores job match</b> — state is always relevant. J5-01 Usage against plan is the displaced alternate; it loses because usage is Under.</p>
+            </div>
+          </div>
+
+          <!-- S6 -->
+          <div class="slot">
+            <div class="slot-hd">
+              <span class="tag">S6</span>
+              <span class="slot-name">Escape</span>
+              <span class="slot-cap">2 · always</span>
+            </div>
+            <div class="slot-body">
+              <div class="esc">
+                <div class="card">
+                  <div class="cid">EXPLORE</div>
+                  <h3>Everything else</h3>
+                </div>
+                <div class="card">
+                  <div class="cid">J9-01</div>
+                  <h3>Your rep</h3>
+                  <p>T. Reyes</p>
+                </div>
+              </div>
+              <p class="note">Ignores job match <b>and every objective veto</b>. Nothing may empty this slot — which is why the rep survives here while Shift bars every route card from S2 and S3. <b>The reading to confirm.</b></p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="suppressed">
+    <h2>Absent from this page, and why</h2>
+    <ul>
+      <li><b>Every J9 route card</b> — Shift scores them 0. Barred from S2 and S3; still reachable in S6, because S6 ignores vetoes.</li>
+      <li><b>J4-06 Talk to a rep about buying</b> — zero under Shift by rule. Offering the rep is how Shift fails.</li>
+      <li><b>J12-05 Punch out to your ERP</b> — Shift 3, a genuine Shift card, but it requires <i>Approve</i> and this profile has <i>Can purchase</i>. Removed by gate 2 before scoring. Authority tiering is undefined; this may be a bug.</li>
+      <li><b>J10-06 Guided tour</b> — precondition fails. Engagement is Habitual, not New or Low frequency.</li>
+      <li><b>J10-01 What you are not using</b> — precondition fails. No dormant entitlement on this profile.</li>
+      <li><b>J4-04 Quote in progress</b> — precondition fails. No open quote.</li>
+    </ul>
+  </div>
+
+  <div class="legend">
+    <h2>Reading this wireframe</h2>
+    <p><b>Slot order is not page order.</b> The Slots tab defines six slots and their fill rules, not their positions. Placing S4 and S6 in a right rail is an interpretation, and the arrangement is the thing to argue with — the fills are what the matrix determines.</p>
+    <p><b>Absence is not low rank.</b> Gates 1–4 remove cards entirely. A card listed above as absent does not sit at the bottom of the page; it does not exist for this visit.</p>
+    <p>Copy is draft, written to be argued with. All figures are illustrative.</p>
+  </div>
+
+</div>
+</body>
+</html>

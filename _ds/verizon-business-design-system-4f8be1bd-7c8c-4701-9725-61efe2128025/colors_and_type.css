@@ -1,0 +1,257 @@
+/* ──────────────────────────────────────────────────────────────────
+   Verizon Business Design System
+   Foundations: color tokens, type scale, fonts, spacing, radius, shadow.
+   Token names follow the VDS (Verizon Design System) convention.
+   ────────────────────────────────────────────────────────────────── */
+
+@font-face {
+  font-family: "Verizon NHG DS";
+  src: url("fonts/VerizonNHGDS-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Verizon NHG eDS";
+  src: url("fonts/VerizonNHGeDS-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Verizon NHG eDS";
+  src: url("fonts/VerizonNHGeDS-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Verizon NHG eTX";
+  src: url("fonts/VerizonNHGeTX-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Verizon NHG eTX";
+  src: url("fonts/VerizonNHGeTX-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ── PRIMITIVES ──────────────────────────────────────────────── */
+  --vds-black: #000000;
+  --vds-white: #FFFFFF;
+
+  /* Verizon brand reds — there are two: VDS "standardred" and the live
+     site uses a slightly brighter "brandhighlight" #E10014 in places.
+     Treat them as the same conceptual red.                            */
+  --vds-red:            #EE001E;   /* vds-color/standardred */
+  --vds-brand-red:      #E10014;   /* vds-color/element/brandhighlight, saving */
+  --vds-limitedred:     #EE001E;
+  --vds-limitedred-200: #FABBC3;
+  --vds-limitedred-1000:#680011;
+
+  --vds-stone:      #F8F3E9;   /* The cream/sand surface */
+  --vds-neonyellow: #F8FF3C;   /* Promo banner yellow */
+  --vds-coral:      #FF281E;
+
+  /* Grays */
+  --vds-gray-100:  #F8F7F5;
+  --vds-gray-200:  #DDDAD4;
+  --vds-gray-400:  #AAA8A3;
+  --vds-gray-600:  #716F6D;
+  --vds-gray-900:  #333332;
+  --vds-gray-1100: #1D1C1C;
+
+  /* Blue scale */
+  --vds-blue-200:  #AAD8F9;
+  --vds-blue-400:  #5AB3F3;
+  --vds-blue-600:  #0089EC;
+  --vds-blue-800:  #006FC0;
+  --vds-blue-900:  #005856;
+  --vds-blue-1000: #003E6C;
+
+  /* Green scale */
+  --vds-green-200: #A4E58D;
+  --vds-green-400: #59D195;
+  --vds-green-600: #02B040;
+  --vds-green-800: #008331;
+  --vds-green-900: #00722B;
+  --vds-green-1000:#004B1C;
+
+  /* Yellow scale */
+  --vds-yellow-200: #FFF1C2;
+  --vds-yellow-400: #FFE787;
+  --vds-yellow-600: #FFCD27;
+  --vds-yellow-800: #A27033;
+  --vds-yellow-900: #885106;
+  --vds-yellow-1000:#685106;
+
+  /* Orange scale */
+  --vds-orange-200: #FFCAAA;
+  --vds-orange-400: #FFAA60;
+  --vds-orange-600: #FF7B00;
+  --vds-orange-800: #B95319;
+  --vds-orange-900: #A24E15;
+  --vds-orange-1000:#732706;
+
+  /* Pink scale */
+  --vds-pink-200:  #FFC0E2;
+  --vds-pink-400:  #FE86C7;
+  --vds-pink-600:  #FE3DAA;
+  --vds-pink-800:  #B6027D;
+  --vds-pink-900:  #800A5E;
+  --vds-pink-1000: #681D45;
+
+  /* Purple scale */
+  --vds-purple-200: #DBC9F7;
+  --vds-purple-400: #B68BF0;
+  --vds-purple-600: #9656A2;
+  --vds-purple-800: #6B43A9;
+  --vds-purple-900: #57203B;
+  --vds-purple-1000:#381C5C;
+
+  /* Iris scale */
+  --vds-iris-200:  #BDC0FF;
+  --vds-iris-400:  #8B89F6;
+  --vds-iris-600:  #6050F2;
+  --vds-iris-800:  #3E42BB;
+  --vds-iris-900:  #333580;
+  --vds-iris-1000: #1F216A;
+
+  /* ── SEMANTIC: SURFACE / BACKGROUND / ELEMENTS ──────────────── */
+  --vds-surface-light-primary:        #FFFFFF;
+  --vds-surface-light-secondary:      #F8F7F5;
+  --vds-surface-light-brand-neutral:  #F8F3E9;   /* stone */
+  --vds-surface-dark-primary:         #000000;
+  --vds-surface-dark-secondary:       #1D1C1C;
+  --vds-surface-dark-brand-highlight: #EE001E;
+
+  --vds-background-lowcontrast: rgba(170, 168, 163, 0.12);
+
+  --vds-element-primary:        #000000;
+  --vds-element-secondary:      #716F6D;
+  --vds-element-lowcontrast:    rgba(170, 168, 163, 0.4);
+  --vds-element-brandhighlight: #E10014;
+  --vds-element-saving:         #E10014;
+
+  /* ── FEEDBACK ────────────────────────────────────────────────── */
+  --vds-feedback-information: #006FC0;
+  --vds-feedback-success:     #008331;
+  --vds-feedback-warning:     #FFCD27;
+  --vds-feedback-error:       #B95319;
+
+  --vds-feedback-bg-information: #AAD8F9;
+  --vds-feedback-bg-success:     #A4E58D;
+  --vds-feedback-bg-warning:     #FFE787;
+  --vds-feedback-bg-error-tonal: #FFCAAA;
+
+  --vds-feedback-element-information-tonal: #003E6C;
+  --vds-feedback-element-success-tonal:     #004B1C;
+  --vds-feedback-element-warning-tonal:     #685106;
+  --vds-feedback-element-error-tonal:       #732706;
+
+  /* ── BORDERS ─────────────────────────────────────────────────── */
+  --vds-border-subtle:   rgba(170, 168, 163, 0.4);
+  --vds-border-default:  #DDDAD4;
+  --vds-border-strong:   #000000;
+
+  /* ── SHADOWS ─────────────────────────────────────────────────── */
+  --vds-shadow-tile:  0 16px 24px rgba(0, 0, 0, 0.02);
+  --vds-shadow-card:  0 8px 24px  rgba(0, 0, 0, 0.06);
+  --vds-shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.10);
+
+  /* ── RADII ───────────────────────────────────────────────────── */
+  --vds-radius-xs:   2px;
+  --vds-radius-sm:   4px;
+  --vds-radius-md:   8px;
+  --vds-radius-lg:   16px;
+  --vds-radius-xl:   24px;
+  --vds-radius-pill: 9999px;
+
+  /* ── SPACING (4-pt grid) ─────────────────────────────────────── */
+  --vds-space-0:   0;
+  --vds-space-1:   4px;
+  --vds-space-2:   8px;
+  --vds-space-3:   12px;
+  --vds-space-4:   16px;
+  --vds-space-5:   20px;
+  --vds-space-6:   24px;
+  --vds-space-8:   32px;
+  --vds-space-10:  40px;
+  --vds-space-12:  48px;
+  --vds-space-16:  64px;
+  --vds-space-20:  80px;
+  --vds-space-24:  96px;
+  --vds-space-32:  128px;
+
+  /* ── TYPE FAMILIES ───────────────────────────────────────────── */
+  /* eDS = Display (UI titles/headlines). eTX = Text (utility/micro).
+     NHG DS Light is reserved for very large oversized hero numerals. */
+  --vds-font-display: "Verizon NHG eDS", "Arial", "Helvetica Neue", sans-serif;
+  --vds-font-display-light: "Verizon NHG DS", "Verizon NHG eDS", sans-serif;
+  --vds-font-text:    "Verizon NHG eTX", "Arial", "Helvetica Neue", sans-serif;
+
+  /* ── TYPE SCALE ──────────────────────────────────────────────── */
+  /* "Feature" sizes are for marketing heroes. "Title" for module/section
+     headings. "Body" for prose. "Micro" for legal/footnotes.
+     Numbers match Figma's audit of the live VDS system.                 */
+  --vds-fs-feature-xl:     144px;  --vds-lh-feature-xl:     136px;
+  --vds-fs-feature-lg:     80px;   --vds-lh-feature-lg:     80px;
+  --vds-fs-feature-md:     64px;   --vds-lh-feature-md:     64px;
+  --vds-fs-feature-sm:     48px;   --vds-lh-feature-sm:     52px;
+
+  --vds-fs-title-2xl:      48px;   --vds-lh-title-2xl:      52px;
+  --vds-fs-title-xl:       40px;   --vds-lh-title-xl:       44px;
+  --vds-fs-title-lg:       32px;   --vds-lh-title-lg:       36px;
+  --vds-fs-title-md:       24px;   --vds-lh-title-md:       28px;
+  --vds-fs-title-sm:       20px;   --vds-lh-title-sm:       24px;
+  --vds-fs-title-xs:       16px;   --vds-lh-title-xs:       20px;
+  --vds-fs-title-2xs:      14px;   --vds-lh-title-2xs:      18px;
+
+  --vds-fs-body-lg:        20px;   --vds-lh-body-lg:        28px;
+  --vds-fs-body-md:        16px;   --vds-lh-body-md:        24px;
+  --vds-fs-body-sm:        14px;   --vds-lh-body-sm:        20px;
+
+  --vds-fs-micro:          12px;   --vds-lh-micro:          16px;
+
+  --vds-tracking-button:   0.5px;
+  --vds-tracking-eyebrow:  0.5px;
+}
+
+/* ────────────────────────────────────────────────────────────────
+   SEMANTIC TYPE UTILITY CLASSES
+   ──────────────────────────────────────────────────────────────── */
+.vds-feature-xl  { font-family: var(--vds-font-display); font-weight:700; font-size:var(--vds-fs-feature-xl); line-height:var(--vds-lh-feature-xl); letter-spacing:-0.5px; }
+.vds-feature-lg  { font-family: var(--vds-font-display); font-weight:700; font-size:var(--vds-fs-feature-lg); line-height:var(--vds-lh-feature-lg); letter-spacing:-0.5px; }
+.vds-feature-md  { font-family: var(--vds-font-display); font-weight:700; font-size:var(--vds-fs-feature-md); line-height:var(--vds-lh-feature-md); }
+.vds-feature-sm  { font-family: var(--vds-font-display); font-weight:700; font-size:var(--vds-fs-feature-sm); line-height:var(--vds-lh-feature-sm); }
+
+.vds-title-2xl   { font-family: var(--vds-font-display); font-weight:700; font-size:var(--vds-fs-title-2xl); line-height:var(--vds-lh-title-2xl); }
+.vds-title-xl    { font-family: var(--vds-font-display); font-weight:700; font-size:var(--vds-fs-title-xl);  line-height:var(--vds-lh-title-xl); }
+.vds-title-lg    { font-family: var(--vds-font-display); font-weight:700; font-size:var(--vds-fs-title-lg);  line-height:var(--vds-lh-title-lg); }
+.vds-title-md    { font-family: var(--vds-font-display); font-weight:700; font-size:var(--vds-fs-title-md);  line-height:var(--vds-lh-title-md); }
+.vds-title-sm    { font-family: var(--vds-font-display); font-weight:700; font-size:var(--vds-fs-title-sm);  line-height:var(--vds-lh-title-sm); }
+.vds-title-xs    { font-family: var(--vds-font-display); font-weight:700; font-size:var(--vds-fs-title-xs);  line-height:var(--vds-lh-title-xs); }
+
+.vds-body-lg     { font-family: var(--vds-font-display); font-weight:400; font-size:var(--vds-fs-body-lg);   line-height:var(--vds-lh-body-lg); }
+.vds-body-md     { font-family: var(--vds-font-display); font-weight:400; font-size:var(--vds-fs-body-md);   line-height:var(--vds-lh-body-md); }
+.vds-body-sm     { font-family: var(--vds-font-text);    font-weight:400; font-size:var(--vds-fs-body-sm);   line-height:var(--vds-lh-body-sm); }
+
+.vds-micro       { font-family: var(--vds-font-text);    font-weight:400; font-size:var(--vds-fs-micro);     line-height:var(--vds-lh-micro); }
+.vds-micro-bold  { font-family: var(--vds-font-text);    font-weight:700; font-size:var(--vds-fs-micro);     line-height:var(--vds-lh-micro); }
+
+.vds-eyebrow     {
+  font-family: var(--vds-font-display); font-weight:700;
+  font-size: 12px; line-height: 16px;
+  letter-spacing: var(--vds-tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--vds-brand-red);
+}
+
+/* Page reset for design system samples */
+html, body { background: var(--vds-surface-light-primary); color: var(--vds-element-primary); }
+body { font-family: var(--vds-font-display); }

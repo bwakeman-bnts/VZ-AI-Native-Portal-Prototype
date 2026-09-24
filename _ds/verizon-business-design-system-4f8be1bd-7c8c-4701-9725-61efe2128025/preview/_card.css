@@ -1,0 +1,72 @@
+/* Shared base for all preview cards. Each card is a self-contained HTML
+   file that loads this file via relative path. Card body is exactly
+   700×<varies> px so the Design System tab tiles render uniformly. */
+
+@import url("../colors_and_type.css");
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  color: var(--vds-element-primary);
+  font-family: var(--vds-font-display);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.card {
+  width: 700px;
+  box-sizing: border-box;
+  padding: 28px 32px;
+  background: #ffffff;
+  position: relative;
+}
+
+.card--cream { background: var(--vds-stone); }
+.card--dark { background: var(--vds-black); color: var(--vds-white); }
+
+.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.col { display: flex; flex-direction: column; gap: 8px; }
+
+.swatch {
+  width: 92px;
+  height: 92px;
+  border-radius: 10px;
+  border: 1px solid var(--vds-border-subtle);
+  display: flex;
+  align-items: flex-end;
+  padding: 8px 10px;
+  box-sizing: border-box;
+  color: #fff;
+  font-family: var(--vds-font-text);
+  font-size: 10px;
+  line-height: 12px;
+}
+.swatch--sm { width: 70px; height: 70px; padding: 6px 8px; font-size: 9px; }
+.swatch--light { color: #000; }
+
+.tok {
+  font-family: var(--vds-font-text);
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--vds-element-secondary);
+  margin-top: 6px;
+  letter-spacing: 0.2px;
+}
+.tok b { color: var(--vds-element-primary); font-weight: 700; }
+
+.label {
+  font-family: var(--vds-font-display);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--vds-element-secondary);
+}
+
+hr.divider {
+  border: 0;
+  height: 1px;
+  background: var(--vds-border-subtle);
+  margin: 16px 0;
+}

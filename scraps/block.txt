@@ -1,0 +1,67 @@
+drillCards: CARDS.map((c) => ({
+        ...c,
+        tags: (c.tags || []).map((label) => ({ label })),
+        hasTags: !!(c.tags || []).length,
+        hasTable: !!(c.rows || []).length,
+        showButton: !(c.rows || []).length,
+        headingOnly: !!c.heading,
+        hasHeaderRow: !!c.heading || !!(c.stats || []).length,
+        hasTakes: !!(c.takes || []).length,
+        takes: c.takes || [],
+        hasActions: !!(c.actions || []).length,
+        actions: (c.actions || []).map((a) => ({ ...a, act: () => { this.setState({ billAction: a.key }); setTimeout(() => this.scrollToEl("bill-action-detail"), 60); } })),
+        hasCompare: !!(c.compare || []).length,
+        pending: !!(c.compare && s.comparisonPending && !s.showComparison),
+        sectionBorder: c.compare ? "none" : "1px solid var(--vds-border-subtle)",
+        showComparison: !!s.showComparison,
+        notShowComparison: !s.showComparison,
+        compareHeads: (c.compare || []).map((cr) => ({ name: cr.name, recommended: !!cr.recommended, act: this.addToOrder(cr) })),
+        addOrder18Pro: this.addToOrder((c.compare || [])[0] || {}),
+        addOrder17Pro: this.addToOrder((c.compare || [])[1] || {}),
+        addOrderS26: this.addToOrder((c.compare || [])[2] || {}),
+        addOrder11Pro: this.addToOrder((c.compare || [])[3] || {}),
+        compareMatrix: [
+          { label: "Your rate", key: "price", color: "#000", deco: "none" },
+          { label: "List price", key: "list", color: "var(--vds-element-secondary)", deco: "line-through" },
+          { label: "Configuration", key: "spec", color: "#000", deco: "none" },
+          { label: "In your fleet", key: "fleet", color: "#000", deco: "none" },
+          { label: "Fit for upgrades", key: "fit", color: "#000", deco: "none", dot: true },
+        ].map((row) => ({
+          label: row.label,
+          cells: (c.compare || []).map((cr) => ({
+            value: cr[row.key] || "—",
+            color: row.color,
+            deco: row.deco,
+            hasDot: !!row.dot,
+            dot: cr.dot || "transparent",
+          })),
+        })),
+        stats: (s.assigned && (c.stats || []).length)
+          ? [{ figure: "3", label: "ready" }, { figure: "1", label: "activating" }, { figure: "2", label: "sites" }]
+          : (c.stats || []),
+        hasStats: !!(c.stats || []).length,
+        showFigure: !(c.stats || []).length,
+        showAside: !(c.stats || []).length,
+        showText: !c.heading,
+        showAssign: !!(c.rows || []).length && !!s.assignLine,
+        showActivate: !!(c.rows || []).length && !!s.activateLine,
+        rows: (c.rows || []).map((r0) => {
+          const done = s.assigned && s.assigned.line === r0.line;
+          const activatedData = (s.activatedLines || {})[r0.line];
+          const r = activatedData
+            ? { ...r0, status: "Active", dot: "#008331" }
+            : done
+            ? { ...r0, user: s.assigned.name, status: "Activating", dot: "#008331", action: "View line" }
+            : r0;
+          return {
+          ...r,
+          showAction: !activatedData,
+          act: activatedData ? null : (r.action === "Assign user"
+            ? (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ assignLine: r.line, assignPick: null, assignQuery: "" }, () => this.focusAssignForm()); }
+            : r.action === "Activate line"
+            ? (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ activateLine: r0.line, activateForm: { user: r0.user === "Unassigned" ? "" : r0.user, device: r0.device, site: r0.site, plan: "Business Unlimited Pro", sim: this.genIccid(), date: "Today" } }, () => this.scrollToEl("activate-form")); }
+            : open(r.action + " · " + r.line)),
+          };
+        }),
+        open: open(c.action),
+      })),

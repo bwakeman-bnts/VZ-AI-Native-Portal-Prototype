@@ -1,0 +1,220 @@
+/* ──────────────────────────────────────────────────────────────────
+   VBG Marketing UI Kit — Verizon Business gridwall + buy-flow.
+   ────────────────────────────────────────────────────────────────── */
+
+@import url("../../colors_and_type.css");
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: #fff; color: var(--vds-element-primary); font-family: var(--vds-font-display); }
+button { font-family: inherit; }
+a { color: inherit; }
+
+/* ── HEADER ────────────────────────────────────────────────── */
+.vbg-utility {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 6px 32px; font-family: var(--vds-font-display);
+  font-size: 12px; line-height: 18px;
+  border-bottom: 1px solid var(--vds-border-default); background: #fff;
+}
+.vbg-utility .left, .vbg-utility .right { display: flex; gap: 4px; align-items: center; }
+.vbg-utility a { color: #000; text-decoration: none; padding: 4px 10px; border-radius: 4px; }
+.vbg-utility a:hover { background: rgba(0,0,0,.04); }
+.vbg-utility a[aria-current="true"] { color: var(--vds-brand-red); font-weight: 700; }
+
+.vbg-primary {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 32px; background: #fff;
+  border-bottom: 1px solid var(--vds-border-default);
+}
+.vbg-primary .brand { display: flex; align-items: baseline; gap: 6px; }
+.vbg-primary .brand img { height: 36px; display: block; }
+.vbg-primary .brand .business { font-family: var(--vds-font-display); font-weight: 400; font-size: 16px; color: #000; margin-left: 4px; }
+.vbg-primary nav { display: flex; gap: 32px; }
+.vbg-primary nav a { font-family: var(--vds-font-display); font-weight: 700; font-size: 16px; color: #000; text-decoration: none; }
+.vbg-primary nav a[aria-current="true"] { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; }
+.vbg-primary .cta { display: flex; align-items: center; gap: 18px; }
+.vbg-primary .cta a { font-family: var(--vds-font-display); font-weight: 700; font-size: 16px; color:#000; text-decoration: none; }
+.vbg-primary .search {
+  display: inline-flex; align-items: center; gap: 10px;
+  border: 1px solid #000; border-radius: 9999px;
+  padding: 8px 14px 8px 18px; font-size: 14px; cursor: pointer;
+  background: #fff;
+}
+
+/* ── PROMO BANNER ──────────────────────────────────────────── */
+.vbg-promo {
+  background: var(--vds-neonyellow);
+  color: var(--vds-brand-red);
+  padding: 12px 32px;
+  text-align: center;
+  font-family: var(--vds-font-display);
+  font-size: 14px; line-height: 20px;
+}
+.vbg-promo a { color: var(--vds-brand-red); text-decoration: underline; font-weight: 700; }
+
+/* ── STEPPER ────────────────────────────────────────────────── */
+.vbg-stepper {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+  padding: 22px 32px; background: #fff;
+  border-bottom: 1px solid var(--vds-border-default);
+}
+.vbg-stepper .step { display: flex; flex-direction: column; gap: 10px; position: relative; padding-right: 24px; cursor: pointer; }
+.vbg-stepper .step:not(:last-child)::after { content:""; position:absolute; left: 32px; right: 0; top: 12px; height: 1px; background: var(--vds-border-default); }
+.vbg-stepper .step .dot {
+  width: 24px; height: 24px; border-radius: 9999px;
+  border: 1px solid var(--vds-gray-400); background: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--vds-element-secondary); font-family: var(--vds-font-text);
+  font-weight: 700; font-size: 11px;
+}
+.vbg-stepper .step.is-done .dot { background: var(--vds-feedback-success); border-color: var(--vds-feedback-success); color: #fff; }
+.vbg-stepper .step.is-current .dot { background: #000; border-color: #000; color: #fff; }
+.vbg-stepper .step .label { font-family: var(--vds-font-display); font-weight: 400; font-size: 14px; color: var(--vds-element-secondary); }
+.vbg-stepper .step.is-current .label, .vbg-stepper .step.is-done .label { color: #000; }
+.vbg-stepper .step.is-current .label { font-weight: 700; }
+
+/* ── BREADCRUMBS + HEADING ──────────────────────────────────── */
+.vbg-crumb { padding: 18px 32px 6px; background: var(--vds-stone); font-family: var(--vds-font-display); font-size: 13px; line-height: 20px; }
+.vbg-crumb a { color: var(--vds-element-secondary); text-decoration: underline; text-underline-offset: 3px; }
+.vbg-crumb .sep { margin: 0 8px; color: var(--vds-element-secondary); }
+.vbg-crumb .current { color: #000; font-weight: 700; }
+
+.vbg-hero { padding: 10px 32px 36px; background: var(--vds-stone); }
+.vbg-hero h1 { font-family: var(--vds-font-display); font-weight: 700; font-size: 56px; line-height: 60px; color: var(--vds-brand-red); margin: 8px 0 4px; letter-spacing: -0.5px; }
+.vbg-hero p { font-family: var(--vds-font-display); font-size: 18px; color: var(--vds-element-secondary); margin: 0; }
+
+/* ── CATEGORY TABS ──────────────────────────────────────────── */
+.vbg-tabs { display: flex; gap: 36px; padding: 0 32px; border-bottom: 1px solid var(--vds-border-default); background: var(--vds-stone); }
+.vbg-tab { font-family: var(--vds-font-display); font-weight: 400; font-size: 16px; color: #000; padding: 18px 0 14px; border-bottom: 3px solid transparent; cursor: pointer; background: transparent; border-left: 0; border-right: 0; border-top: 0; }
+.vbg-tab[aria-selected="true"] { font-weight: 700; border-bottom-color: #000; }
+.vbg-tab:hover { color: #000; }
+
+/* ── MAIN GRID LAYOUT ──────────────────────────────────────── */
+.vbg-main { display: grid; grid-template-columns: 260px 1fr; gap: 0; background: var(--vds-stone); padding: 32px 32px 64px; }
+.vbg-filters { padding-right: 32px; }
+.vbg-filter-head { font-family: var(--vds-font-display); font-weight: 700; font-size: 20px; padding-bottom: 16px; display: flex; align-items: baseline; gap: 12px; }
+.vbg-filter-head .count { font-weight: 400; font-size: 13px; color: var(--vds-element-secondary); }
+.vbg-sortby {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  border: 1px solid #000; border-radius: 4px; padding: 12px 14px;
+  background: #fff; font-family: var(--vds-font-display);
+  cursor: pointer; margin-bottom: 16px; position: relative;
+}
+.vbg-sortby .lbl { font-size: 11px; color: var(--vds-element-secondary); display: block; }
+.vbg-sortby .val { font-size: 15px; color: #000; }
+.vbg-sortby-menu { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 1px solid #000; border-radius: 4px; margin-top: 4px; z-index: 10; box-shadow: var(--vds-shadow-card); }
+.vbg-sortby-menu button { display: block; width: 100%; text-align: left; padding: 10px 14px; background: none; border: 0; font-family: var(--vds-font-display); font-size: 14px; cursor: pointer; }
+.vbg-sortby-menu button:hover { background: rgba(0,0,0,.04); }
+
+.vbg-acc-row { padding: 16px 0; border-bottom: 1px solid var(--vds-border-default); }
+.vbg-acc-row:first-of-type { border-top: 1px solid var(--vds-border-default); }
+.vbg-acc-head { display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+.vbg-acc-head .ttl { font-family: var(--vds-font-display); font-weight: 700; font-size: 16px; }
+.vbg-acc-head .chev { width: 14px; height: 14px; position: relative; }
+.vbg-acc-head .chev::before, .vbg-acc-head .chev::after { content:""; position:absolute; background:#000; }
+.vbg-acc-head .chev::before { width:14px; height:1.5px; top: 6px; left: 0; }
+.vbg-acc-head .chev::after { width: 1.5px; height: 14px; top: 0; left: 6px; transition: transform 150ms ease; }
+.vbg-acc-row[data-open="true"] .vbg-acc-head .chev::after { transform: rotate(90deg); opacity: 0; }
+.vbg-acc-body { padding-top: 12px; font-family: var(--vds-font-display); font-size: 14px; color: #000; }
+.vbg-acc-body label { display: flex; align-items: center; gap: 10px; padding: 6px 0; cursor: pointer; }
+.vbg-acc-body label input { accent-color: #000; }
+
+/* ── GRID ──────────────────────────────────────────────────── */
+.vbg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; align-content: start; }
+
+.vbg-card { background: #fff; border: 1px solid var(--vds-border-subtle); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 10px; min-height: 460px; box-shadow: var(--vds-shadow-tile); transition: box-shadow 180ms ease, transform 180ms ease; }
+.vbg-card:hover { box-shadow: var(--vds-shadow-hover); }
+
+.vbg-card .tag {
+  display: inline-flex; align-self: flex-start;
+  align-items: center; gap: 6px;
+  background: var(--vds-neonyellow); color: var(--vds-brand-red);
+  padding: 4px 12px; border-radius: 9999px;
+  font-family: var(--vds-font-text); font-weight: 700; font-size: 11px; letter-spacing: 0.3px; text-transform: uppercase;
+}
+.vbg-card .tag a { color: var(--vds-brand-red); text-decoration: underline; }
+
+.vbg-card .image { height: 160px; border-radius: 6px; background: linear-gradient(160deg, var(--vds-gray-200) 0%, var(--vds-gray-400) 100%); display: flex; align-items: center; justify-content: center; color: rgba(0,0,0,.4); font-family: var(--vds-font-text); font-size: 11px; }
+
+.vbg-card .swatches { display: flex; gap: 6px; margin-top: 4px; }
+.vbg-card .swatches span { width: 14px; height: 14px; border-radius: 9999px; border: 1px solid var(--vds-border-default); display: inline-block; }
+
+.vbg-card .name { font-family: var(--vds-font-display); font-weight: 700; font-size: 16px; line-height: 22px; }
+.vbg-card .price-line { font-family: var(--vds-font-display); font-size: 13px; line-height: 18px; color: var(--vds-element-secondary); }
+.vbg-card .price-line b { color: #000; }
+
+.vbg-card .row { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 8px; gap: 12px; }
+.vbg-card .row button { font-family: var(--vds-font-display); font-weight: 700; font-size: 13px; background: #fff; color: #000; border: 1px solid #000; border-radius: 9999px; padding: 8px 16px; letter-spacing: .4px; cursor: pointer; }
+.vbg-card .row button:hover { background: rgba(0,0,0,.04); }
+.vbg-card .compare { display: inline-flex; align-items: center; gap: 6px; font-family: var(--vds-font-display); font-size: 13px; cursor: pointer; }
+
+/* ── INSERT CARDS ──────────────────────────────────────────── */
+.vbg-insert { border-radius: 8px; padding: 24px 22px; display: flex; flex-direction: column; gap: 12px; min-height: 460px; position: relative; overflow: hidden; }
+.vbg-insert h3 { font-family: var(--vds-font-display); font-weight: 700; font-size: 24px; line-height: 28px; margin: 0; }
+.vbg-insert p { font-family: var(--vds-font-display); font-size: 14px; line-height: 20px; margin: 0; }
+.vbg-insert button { align-self: flex-start; font-family: var(--vds-font-display); font-weight: 700; font-size: 14px; padding: 9px 20px; border-radius: 9999px; border: 1px solid currentColor; cursor: pointer; letter-spacing: .4px; }
+.vbg-insert--finance { background: var(--vds-surface-light-secondary); color: #000; border: 1px solid var(--vds-border-subtle); }
+.vbg-insert--finance button { background: #fff; }
+.vbg-insert--complete { background: #000; color: #fff; }
+.vbg-insert--complete button { background: #fff; color: #000; border-color: #fff; }
+.vbg-insert--complete .eyebrow { color: var(--vds-brand-red); }
+.vbg-insert--byod { background: var(--vds-brand-red); color: #fff; }
+.vbg-insert--byod button { background: transparent; color: #fff; border-color: #fff; }
+
+.vbg-insert .eyebrow { font-family: var(--vds-font-display); font-weight: 700; font-size: 12px; letter-spacing: .5px; text-transform: uppercase; }
+
+/* ── PLAN COMPARISON ──────────────────────────────────────── */
+.vbg-plans { background: #fff; padding: 64px 32px; border-top: 1px solid var(--vds-border-default); }
+.vbg-plans-head { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; }
+.vbg-plans h2 { font-family: var(--vds-font-display); font-weight: 700; font-size: 40px; line-height: 44px; margin: 0; }
+.vbg-plans-toggle { display: flex; gap: 0; border: 1px solid #000; border-radius: 9999px; padding: 4px; }
+.vbg-plans-toggle button { font-family: var(--vds-font-display); font-weight: 700; font-size: 14px; padding: 8px 18px; border-radius: 9999px; border: 0; background: transparent; cursor: pointer; }
+.vbg-plans-toggle button[aria-pressed="true"] { background: #000; color: #fff; }
+.vbg-plans-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.vbg-plan {
+  background: #fff; border: 1px solid var(--vds-border-default);
+  border-radius: 8px; padding: 24px 22px;
+  display: flex; flex-direction: column; gap: 12px;
+  position: relative;
+}
+.vbg-plan.is-featured { border-color: #000; border-width: 2px; }
+.vbg-plan .ribbon { position: absolute; top: 0; left: -1px; background: var(--vds-brand-red); color: #fff; font-family: var(--vds-font-text); font-weight: 700; font-size: 11px; letter-spacing: .4px; padding: 5px 12px; border-radius: 0 0 6px 0; text-transform: uppercase; }
+.vbg-plan h3 { font-family: var(--vds-font-display); font-weight: 700; font-size: 22px; line-height: 26px; color: var(--vds-brand-red); margin: 14px 0 0; }
+.vbg-plan .price { display: flex; align-items: baseline; gap: 4px; font-family: var(--vds-font-display); color: #000; }
+.vbg-plan .price .big { font-size: 56px; line-height: 60px; font-weight: 700; }
+.vbg-plan .price .small { font-size: 14px; color: var(--vds-element-secondary); }
+.vbg-plan .legal { font-family: var(--vds-font-text); font-size: 12px; color: var(--vds-element-secondary); }
+.vbg-plan ul { margin: 6px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; font-family: var(--vds-font-display); font-size: 14px; line-height: 20px; color: #000; }
+.vbg-plan ul li { display: flex; gap: 10px; align-items: flex-start; }
+.vbg-plan ul li::before { content:"✓"; color: var(--vds-feedback-success); font-weight: 700; }
+.vbg-plan .pick { margin-top: auto; align-self: stretch; font-family: var(--vds-font-display); font-weight: 700; font-size: 16px; padding: 12px 24px; border-radius: 9999px; cursor: pointer; letter-spacing: .5px; }
+.vbg-plan .pick--primary { background: #000; color: #fff; border: 1px solid #000; }
+.vbg-plan .pick--secondary { background: transparent; color: #000; border: 1px solid #000; }
+
+/* ── FOOTER ────────────────────────────────────────────────── */
+.vbg-footer { background: #000; color: #fff; padding: 56px 32px 24px; }
+.vbg-footer h4 { font-family: var(--vds-font-display); font-weight: 700; font-size: 16px; margin: 0 0 16px; }
+.vbg-footer .cols { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 24px; }
+.vbg-footer .cols ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.vbg-footer a { color: rgba(255,255,255,.8); text-decoration: none; font-family: var(--vds-font-display); font-size: 14px; }
+.vbg-footer a:hover { color: #fff; text-decoration: underline; }
+.vbg-footer .legal { margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.2); font-family: var(--vds-font-text); font-size: 11px; color: rgba(255,255,255,.6); line-height: 16px; }
+
+/* ── HOVER + DETAIL ────────────────────────────────────────── */
+.vbg-compare-bar { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); background: #000; color: #fff; border-radius: 9999px; padding: 12px 20px; font-family: var(--vds-font-display); display: flex; align-items: center; gap: 14px; box-shadow: 0 12px 32px rgba(0,0,0,.2); z-index: 50; }
+.vbg-compare-bar button { background: #fff; color: #000; border: 0; border-radius: 9999px; padding: 8px 16px; font-family: inherit; font-weight: 700; font-size: 13px; cursor: pointer; }
+
+/* ── HERO / SPLASH ────────────────────────────────────────── */
+.vbg-splash {
+  background: var(--vds-stone);
+  padding: 56px 32px;
+  display: grid; grid-template-columns: 1.1fr 1fr; gap: 32px;
+  align-items: center;
+}
+.vbg-splash .eyebrow { font-family: var(--vds-font-display); font-weight: 700; font-size: 13px; color: var(--vds-brand-red); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 12px; }
+.vbg-splash h1 { font-family: var(--vds-font-display); font-weight: 700; font-size: 64px; line-height: 64px; color: #000; margin: 0 0 18px; letter-spacing: -0.5px; }
+.vbg-splash p { font-family: var(--vds-font-display); font-size: 18px; line-height: 26px; color: #000; margin: 0 0 24px; max-width: 540px; }
+.vbg-splash .ctas { display: flex; gap: 12px; }
+.vbg-splash .ctas .primary { background: #000; color: #fff; border: 1px solid #000; padding: 14px 28px; border-radius: 9999px; font-family: var(--vds-font-display); font-weight: 700; font-size: 16px; letter-spacing: .5px; cursor: pointer; }
+.vbg-splash .ctas .secondary { background: transparent; color: #000; border: 1px solid #000; padding: 14px 28px; border-radius: 9999px; font-family: var(--vds-font-display); font-weight: 700; font-size: 16px; letter-spacing: .5px; cursor: pointer; }
+.vbg-splash .photo { aspect-ratio: 4 / 3; background: linear-gradient(160deg, #DDDAD4 0%, #716F6D 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.7); font-family: var(--vds-font-text); }
