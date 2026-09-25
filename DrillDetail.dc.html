@@ -1,0 +1,592 @@
+<x-dc>
+      <div style="flex:1;min-width:0;overflow-y:auto;padding:24px 24px 40px;background:var(--vds-stone);box-sizing:border-box">
+        <div style="view-transition-name: {{ drillVtName }};position:relative;max-width:1180px;margin:0 auto;border:1px solid var(--vds-border-subtle);border-radius:8px;background:#fff;overflow:hidden;display:flex;flex-direction:column">
+
+          <button onClick="{{ exitDrill }}" title="Close" style="position:absolute;top:18px;right:18px;z-index:2;flex:none;display:flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--vds-border-default);background:#fff;cursor:pointer;border-radius:9999px" style-hover="background:rgba(0,0,0,.06)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg>
+          </button>
+
+          <section id="page-top" style="padding:40px 56px 30px;display:flex;flex-direction:column;gap:10px">
+            <sc-if value="{{ drillEyebrow }}">
+              <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">{{ drillEyebrow }}</span>
+            </sc-if>
+            <h2 style="margin:0;font-size:28px;line-height:33px;font-weight:700;letter-spacing:-.4px;text-wrap:pretty">{{ drillTitle }}</h2>
+            <sc-if value="{{ drillSubcopy }}" hint-placeholder-val="{{ false }}">
+              <p style="margin:0;font-size:14px;line-height:20px;color:var(--vds-element-secondary);text-wrap:pretty">{{ drillSubcopy }}</p>
+            </sc-if>
+            <sc-if value="{{ drillBullets }}" hint-placeholder-val="{{ false }}">
+              
+            </sc-if>
+            <sc-if value="{{ drillActions }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px">
+                <a href="#" onClick="{{ askAboutBill }}" style="display:flex;align-items:center;gap:8px;border:1px solid #000;background:#000;color:#fff;border-radius:9999px;padding:11px 24px;font-size:14px;font-weight:700;letter-spacing:.5px;text-decoration:none;cursor:pointer">
+                  <img src="uploads/AISparkle.svg" alt="" style="width:16px;height:16px;display:block;flex:none;filter:brightness(0) invert(1)">
+                  Ask about this bill
+                </a>
+                <button onClick="{{ viewAugustStatement }}" style="border:1px solid var(--vds-border-default);background:#fff;color:#000;border-radius:9999px;padding:11px 24px;font-size:14px;cursor:pointer;white-space:nowrap" style-hover="border-color:#000">View August statement</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ drillUpdateActions }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px">
+                <button style="border:1px solid #000;background:#000;color:#fff;border-radius:9999px;padding:11px 24px;font-size:14px;font-weight:700;letter-spacing:.5px;cursor:pointer">Push update to all lines</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ drillShipActions }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px">
+                <button style="border:1px solid #000;background:#000;color:#fff;border-radius:9999px;padding:11px 24px;font-size:14px;font-weight:700;letter-spacing:.5px;cursor:pointer">Confirm shipment</button>
+              </div>
+            </sc-if>
+          </section>
+
+          <sc-if value="{{ drillDeviceRows }}" hint-placeholder-val="{{ false }}">
+            <section style="padding:0 56px 30px">
+              <div style="border:1px solid var(--vds-border-subtle);border-radius:8px;overflow:hidden">
+                <div style="display:grid;grid-template-columns:1fr 2fr 1.4fr;gap:16px;padding:14px 20px;background:var(--vds-background-lowcontrast)">
+                  <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Line</span>
+                  <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Issue</span>
+                  <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Fix</span>
+                </div>
+                <sc-for list="{{ drillDeviceRows }}" as="dr" hint-placeholder-count="6">
+                  <div style="display:grid;grid-template-columns:1fr 2fr 1.4fr;gap:16px;align-items:center;padding:14px 20px;border-top:1px solid var(--vds-border-subtle);background:#fff">
+                    <span style="font-size:14px;font-weight:700;color:#000">{{ dr.line }}</span>
+                    <span style="display:flex;align-items:center;gap:8px;font-size:13px;color:#000"><span style="flex:none;width:7px;height:7px;border-radius:9999px;background: {{ dr.dot }}"></span>{{ dr.issue }}</span>
+                    <span style="font-size:13px;font-weight:700;color: {{ dr.fixColor }}">{{ dr.fix }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </section>
+          </sc-if>
+
+          <sc-if value="{{ drillBillSummary }}" hint-placeholder-val="{{ false }}">
+            <section style="padding:0 56px 30px">
+              <div style="width:100%;border:1px solid var(--vds-border-subtle);border-radius:8px;overflow:hidden;background:#fff;box-shadow:var(--vds-shadow-tile)">
+                <div style="display: grid; grid-template-columns: 1fr 90px 90px 76px; gap: 12px; padding: 20px 24px 14px; background-color: var(--vds-stone)">
+                  <div style="display:flex;flex-direction:column;gap:2px">
+                    <span style="font-size:18px;font-weight:700;color:#000">Summary of changes</span>
+                    <span style="font-size:11px;color:var(--vds-element-secondary)">*Dashes indicate a $0 value</span>
+                  </div>
+                  <span style="font-size:14px;font-weight:700;color:#000;text-align:right">Jul</span>
+                  <span style="font-size:14px;font-weight:700;color:#000;text-align:right">Aug</span>
+                  <span style="font-size:14px;font-weight:700;color:#000;text-align:right">Change</span>
+                </div>
+                
+                <sc-for list="{{ billSummaryRows }}" as="row" hint-placeholder-count="9">
+                  <div style="display:grid;grid-template-columns:1fr 90px 90px 76px;gap:12px;align-items:center;padding: {{ row.paddingY }} 24px;background: {{ row.bg }}">
+                    <span style="font-size: {{ row.fontSize }};font-weight: {{ row.weight }};color:#000;padding-left: {{ row.indent }};display:flex;align-items:center;gap:8px">{{ row.label }}<sc-if value="{{ row.info }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--vds-element-secondary)" stroke-width="1.6"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 10.6V16"></path><circle cx="12" cy="7.8" r=".4" fill="var(--vds-element-secondary)"></circle></svg></sc-if></span>
+                    <span style="font-size: {{ row.fontSize }};font-weight: {{ row.weight }};color:#000;text-align:right">{{ row.aug }}</span>
+                    <span style="font-size: {{ row.fontSize }};font-weight: {{ row.weight }};color:#000;text-align:right">{{ row.sep }}</span>
+                    <span style="display:flex;align-items:center;justify-content:flex-end;gap:4px">
+                      <span style="font-size: {{ row.fontSize }};font-weight: {{ row.weight }};color:#000">{{ row.change }}</span>
+                      <sc-if value="{{ row.down }}">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#008331" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><path d="M6 13l6 6 6-6"></path></svg>
+                      </sc-if>
+                      <sc-if value="{{ row.up }}">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#B75B00" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"></line><path d="M6 11l6-6 6 6"></path></svg>
+                      </sc-if>
+                      <sc-if value="{{ row.chevron }}">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" style="margin-left:6px"><path d="M6 15l6-6 6 6"></path></svg>
+                      </sc-if>
+                    </span>
+                  </div>
+                </sc-for>
+              </div>
+            </section>
+          </sc-if>
+
+          <sc-if value="{{ drillDocument }}" hint-placeholder-val="{{ false }}">
+            <section style="padding:0 56px 30px;display:flex;flex-direction:column;align-items:center;gap:18px">
+              <div style="width:100%;max-width:520px;border:1px solid var(--vds-border-subtle);border-radius:8px;background:#fff;box-shadow:var(--vds-shadow-tile);padding:40px;display:flex;flex-direction:column;align-items:center;gap:18px">
+                <span style="display:flex;align-items:center;justify-content:center;width:64px;height:80px;border:1px solid var(--vds-border-default);border-radius:4px;background:var(--vds-stone)">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.4"><path d="M6 3.5h8L18.5 8v12.5H6z"></path><path d="M13.6 3.6V8.2h4.7"></path><line x1="9" y1="13" x2="15" y2="13"></line><line x1="9" y1="16.5" x2="13" y2="16.5"></line></svg>
+                </span>
+                <button style="border:1px solid #000;background:#000;color:#fff;border-radius:9999px;padding:11px 24px;font-size:14px;font-weight:700;letter-spacing:.5px;cursor:pointer;display:flex;align-items:center;gap:8px">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6"><path d="M7 3h8l4 4v14H7z"></path><path d="M15 3v4h4"></path><line x1="10" y1="12" x2="16" y2="12"></line><line x1="10" y1="16" x2="16" y2="16"></line></svg>
+                  View August Statement
+                </button>
+              </div>
+            </section>
+          </sc-if>
+
+          <sc-for list="{{ drillCards }}" as="d" hint-placeholder-count="1">
+
+            <sc-if value="{{ d.hasHeaderRow }}" hint-placeholder-val="{{ false }}">
+              <section style="border-top: {{ d.sectionBorder }};padding:0 56px 30px;display:flex;flex-direction:column;gap:24px">
+                <sc-if value="{{ !activationConfirmed }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                    <button onClick="{{ activateAllDevices }}" style="align-self:flex-start;display:flex;align-items:center;gap:8px;border:1px solid #000;background:#000;border-radius:9999px;padding:9px 16px;font-size:13px;font-weight:700;color:#fff;cursor:pointer" style-hover="background:#222">
+                      <span>Activate all devices</span>
+                    </button>
+                    <button onClick="{{ openChat }}" style="align-self:flex-start;display:flex;align-items:center;gap:8px;border:1px solid var(--vds-border-subtle);background:#fff;border-radius:9999px;padding:9px 16px;font-size:13px;color:#000;cursor:pointer" style-hover="background:rgba(0,0,0,.03)">
+                      <span>Activate individual lines</span>
+                    </button>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ d.hasTable }}" hint-placeholder-val="{{ false }}">
+                  <div style="overflow-x:auto">
+                    <div style="min-width:640px;border:1px solid var(--vds-border-subtle);border-radius:8px;overflow:hidden">
+                      <div style="display:grid;grid-template-columns:1fr 1.6fr 24px 1.6fr .8fr;gap:16px;padding:14px 20px;background:var(--vds-background-lowcontrast)">
+                        <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Wireless number</span>
+                        <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Existing device</span>
+                        <span></span>
+                        <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">New device</span>
+                        <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Status</span>
+                      </div>
+                      <sc-for list="{{ d.rows }}" as="r" hint-placeholder-count="4">
+                        <div style="display: grid; grid-template-columns: 1fr 1.6fr 24px 1.6fr .8fr; gap: 16px; align-items: flex-start; padding: 14px 20px; border-top: 1px solid var(--vds-border-subtle); background-color: var(--vds-gray-100)">
+                          <span style="display:flex;flex-direction:column;gap:2px">
+                            <span style="font-size:14px;font-weight:700;color:#000">{{ r.line }}</span>
+                            <span style="font-size:13px;color:var(--vds-element-secondary)">{{ r.user }}</span>
+                          </span>
+                          <span style="display:flex;align-items:flex-start;gap:10px">
+                            <image-slot id="{{ r.existingThumbId }}" shape="rounded" radius="6" style="width:40px;height:40px;flex:none" placeholder="Device" src="{{ r.existingSrc }}"></image-slot>
+                            <span style="display:flex;flex-direction:column;gap:2px">
+                              <span style="font-size:13px;font-weight:700;color:#000">{{ r.existingDevice }}</span>
+                              <span style="font-size:12px;color:var(--vds-element-secondary)">{{ r.existingColorStorage }}</span>
+                              <span style="font-size:12px;color:var(--vds-element-secondary)">IMEI: {{ r.existingImei }}</span>
+                              <span style="font-size:12px;color:var(--vds-element-secondary)">{{ r.existingDual }}</span>
+                            </span>
+                          </span>
+                          <span style="display:flex;align-items:center;justify-content:center;height:40px">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--vds-element-secondary)" stroke-width="1.6" style="flex:none"><line x1="4" y1="12" x2="19" y2="12"></line><path d="M13 6l6 6-6 6"></path></svg>
+                          </span>
+                          <span style="display:flex;align-items:flex-start;gap:10px">
+                              <image-slot id="{{ r.newThumbId }}" shape="rounded" radius="6" style="width:40px;height:40px;flex:none" placeholder="Device" src="{{ r.newSrc }}"></image-slot>
+                              <span style="display:flex;flex-direction:column;gap:2px">
+                                <span style="font-size:13px;font-weight:700;color:#000">{{ r.device }}</span>
+                                <span style="font-size:12px;color:var(--vds-element-secondary)">{{ r.newColorStorage }}</span>
+                                <span style="font-size:12px;color:var(--vds-element-secondary)">IMEI: {{ r.newImei }}</span>
+                                <span style="font-size:12px;color:var(--vds-element-secondary)">{{ r.newDual }}</span>
+                              </span>
+                            </span>
+                          <span style="display:flex;align-items:center;gap:8px"><span style="flex:none;width:7px;height:7px;border-radius:9999px;background: {{ r.dot }}"></span><span style="font-size:13px;color:#000;white-space:nowrap">{{ r.status }}</span></span>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <sc-if value="{{ activationConfirmed }}">
+                      <div id="activation-success" style="border: 1px solid var(--vds-border-subtle); border-radius: 8px; padding: 24px 28px; display: flex; flex-direction: column; gap: 14px; background-color: var(--vds-gray-100)">
+                        <span style="display:inline-flex;align-items:center;gap:6px;align-self:flex-start;padding:4px 10px;border-radius:9999px;background:var(--vds-feedback-success);color:#fff">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M20 6L9 17l-5-5"></path></svg>
+                          <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;font-weight:700">Success</span>
+                        </span>
+                        <h3 style="margin:0;font-size:19px;font-weight:700;color:#000">Activation initiated</h3>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;padding-top:2px">
+                          <span style="display:flex;flex-direction:column;gap:2px">
+                            <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Transaction number</span>
+                            <span style="font-size:14px;font-weight:700;color:#000">{{ activationSummary.txnNumber }}</span>
+                          </span>
+                          <span style="display:flex;flex-direction:column;gap:2px">
+                            <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Transaction date</span>
+                            <span style="font-size:14px;font-weight:700;color:#000">{{ activationSummary.txnDate }}</span>
+                          </span>
+                          <span style="display:flex;flex-direction:column;gap:2px">
+                            <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Account number</span>
+                            <span style="font-size:14px;font-weight:700;color:#000">{{ activationSummary.accountNumber }}</span>
+                          </span>
+                          <span style="display:flex;flex-direction:column;gap:2px">
+                            <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Devices activated</span>
+                            <span style="font-size:14px;font-weight:700;color:#000">{{ activationSummary.deviceCount }}</span>
+                          </span>
+                        </div>
+                        <p style="margin:4px 0 0;font-size:14px;line-height:21px;color:var(--vds-element-secondary);text-wrap:pretty">Each end user will receive a text message on their new device with setup instructions. Once set up, ask them to place a test call by dialing <strong style="color:#000">#832</strong> to confirm activation.</p>
+                        <div style="display:flex;flex-direction:column;gap:2px;border:1px solid var(--vds-border-subtle);border-radius:8px;overflow:hidden;margin-top:4px">
+                          <sc-for list="{{ activatedRows }}" as="ar" hint-placeholder-count="4">
+                            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 18px;background:#fff;border-top:1px solid var(--vds-border-subtle)">
+                              <span style="font-size:14px;font-weight:700;color:#000">{{ ar.line }}</span>
+                              <span style="font-size:14px;color:var(--vds-element-secondary)">{{ ar.device }}</span>
+                            </div>
+                          </sc-for>
+                        </div>
+                        <p style="margin:4px 0 0;font-size:14px;line-height:21px;color:var(--vds-element-secondary);text-wrap:pretty">A confirmation email has been sent to {{ activationEmail }}. You can also find confirmation of this in your Account Log. <a href="#" onClick="{{ goAccount }}" style="color:#000;font-weight:700;text-decoration:underline;text-underline-offset:3px">View Account Log</a></p>
+                      </div>
+                    </sc-if>
+                </sc-if>
+              </section>
+            </sc-if>
+
+            <sc-if value="{{ d.hasTakes }}" hint-placeholder-val="{{ false }}">
+              <section style="padding: 0 56px 30px; display: flex; flex-direction: column; gap: 24px; background-color: var(--vds-white)">
+                <div style="border: 1px solid var(--vds-border-subtle); border-radius: 8px; box-shadow: var(--vds-shadow-tile); padding: 28px 32px; display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 24px; background-color: var(--vds-gray-100)">
+                  <sc-for list="{{ d.takes }}" as="tk" hint-placeholder-count="4">
+                    <div style="display:flex;flex-direction:column;align-items:flex-start;gap:18px">
+                      <span style="flex:none;display:flex;align-items:center;justify-content:center;width:110px;aspect-ratio:2/3;border-radius:4px;background:var(--vds-background-lowcontrast);overflow:hidden;background-image:url({{ tk.image }});background-size:contain;background-repeat:no-repeat;background-position:center"></span>
+                      <span style="width:100%;display:flex;flex-direction:column;gap:10px">
+                        <span style="align-self:flex-start;border:1px solid #000;border-radius:9999px;padding:5px 12px;font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:#000;white-space:nowrap">{{ tk.tag }}</span>
+                        <span style="font-size:16px;line-height:21px;font-weight:700;color:#000">{{ tk.name }}</span>
+                        <ul style="margin:0;padding:0 0 0 16px;display:flex;flex-direction:column;gap:4px">
+                          <sc-for list="{{ tk.bullets }}" as="bl" hint-placeholder-count="2">
+                            <li style="font-size:14px;line-height:20px;color:var(--vds-element-secondary);text-wrap:pretty">{{ bl }}</li>
+                          </sc-for>
+                        </ul>
+                      </span>
+                      <button style="align-self:flex-start;border:1px solid var(--vds-border-default);border-radius:9999px;background:#fff;padding:9px 18px;font-size:13px;color:#000;cursor:pointer" style-hover="border-color:#000">Select device</button>
+                    </div>
+                  </sc-for>
+                </div>
+                <sc-if value="{{ d.pending }}" hint-placeholder-val="{{ false }}">
+                  <div id="comparison-section" style="border: 1px solid var(--vds-border-subtle); border-radius: 8px; box-shadow: var(--vds-shadow-tile); padding: 28px 32px; display: flex; flex-direction: column; gap: 16px; background-color: var(--vds-gray-100)">
+                    <h3 style="margin:0;font-size:22px;line-height:27px;font-weight:700;letter-spacing:-.3px;text-wrap:pretty">Comparison table</h3>
+                      <div style="display:flex;align-items:center;gap:10px;padding:20px 0">
+                        <img src="uploads/AISparkle.svg" alt="" style="width:18px;height:18px;display:block;flex:none;filter:brightness(0);animation:vzPulse 1.1s ease-in-out infinite">
+                        <span style="font-size:14px;color:var(--vds-element-secondary)">Building your comparison</span>
+                        <span style="display:flex;align-items:center;gap:3px">
+                          <span style="width:5px;height:5px;border-radius:9999px;background:var(--vds-element-secondary);animation:vzTypingDot 1.1s ease-in-out infinite"></span>
+                          <span style="width:5px;height:5px;border-radius:9999px;background:var(--vds-element-secondary);animation:vzTypingDot 1.1s ease-in-out infinite;animation-delay:.15s"></span>
+                          <span style="width:5px;height:5px;border-radius:9999px;background:var(--vds-element-secondary);animation:vzTypingDot 1.1s ease-in-out infinite;animation-delay:.3s"></span>
+                        </span>
+                      </div>
+                    </div>
+                    </sc-if>
+                <sc-if value="{{ d.showComparison }}" hint-placeholder-val="{{ false }}">
+                  <div style="border: 1px solid var(--vds-border-subtle); border-radius: 8px; box-shadow: var(--vds-shadow-tile); padding: 28px 32px; display: flex; flex-direction: column; gap: 16px; background-color: var(--vds-gray-100)">
+                    <h3 style="margin:0;font-size:22px;line-height:27px;font-weight:700;letter-spacing:-.3px;text-wrap:pretty">Comparison table</h3>
+                      <div style="overflow-x:auto">
+                        <div style="min-width:640px;display:grid;grid-template-columns:150px repeat(4,minmax(140px,1fr));gap:16px;border:1px solid var(--vds-border-subtle);border-radius:8px;overflow:hidden">
+                          <div style="grid-column:1/-1;display:grid;grid-template-columns:150px repeat(4,minmax(140px,1fr));gap:16px;padding:16px 20px;background:var(--vds-background-lowcontrast)">
+                            <span></span>
+                            <sc-for list="{{ d.compareHeads }}" as="ch" hint-placeholder-count="4">
+                              <span style="display:flex;flex-direction:column;gap:6px">
+                                <span style="font-size:13px;font-weight:700;color:#000">{{ ch.name }}</span>
+                                <button onClick="{{ ch.act }}" style="align-self:flex-start;border:1px solid #000;background:#000;color:#fff;border-radius:9999px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer">Add to order</button>
+                              </span>
+                            </sc-for>
+                          </div>
+                          <sc-for list="{{ d.compareMatrix }}" as="cm" hint-placeholder-count="5">
+                            <div style="grid-column:1/-1;display:grid;grid-template-columns:150px repeat(4,minmax(140px,1fr));gap:16px;align-items:center;padding:14px 20px;border-top:1px solid var(--vds-border-subtle);background:#fff">
+                              <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">{{ cm.label }}</span>
+                              <sc-for list="{{ cm.cells }}" as="cell" hint-placeholder-count="4">
+                                <span style="display:flex;align-items:center;gap:8px;font-size:14px;color: {{ cell.color }};text-decoration: {{ cell.deco }}">
+                                  <sc-if value="{{ cell.hasDot }}"><span style="flex:none;width:7px;height:7px;border-radius:9999px;background: {{ cell.dot }}"></span></sc-if>
+                                  {{ cell.value }}
+                                </span>
+                              </sc-for>
+                            </div>
+                          </sc-for>
+                        </div>
+                      </div>
+                    </div>
+                    </sc-if>
+                    <sc-if value="{{ d.techFeaturesActive }}" hint-placeholder-val="{{ false }}">
+                      <div id="tech-features-section" style="border: 1px solid var(--vds-border-subtle); border-radius: 8px; box-shadow: var(--vds-shadow-tile); background-color: var(--vds-gray-100); padding: 28px 32px; display: flex; flex-direction: column; gap: 16px">
+                        <h3 style="margin:0;font-size:22px;line-height:27px;font-weight:700;letter-spacing:-.3px;text-wrap:pretty">Technical feature comparison</h3>
+                        <sc-if value="{{ d.techFeaturesLoading }}" hint-placeholder-val="{{ false }}">
+                          <div style="display:flex;align-items:center;gap:10px;padding:20px 0">
+                            <img src="uploads/AISparkle.svg" alt="" style="width:18px;height:18px;display:block;flex:none;filter:brightness(0);animation:vzPulse 1.1s ease-in-out infinite">
+                            <span style="font-size:14px;color:var(--vds-element-secondary)">Comparing specs across devices</span>
+                            <span style="display:flex;align-items:center;gap:3px">
+                              <span style="width:5px;height:5px;border-radius:9999px;background:var(--vds-element-secondary);animation:vzTypingDot 1.1s ease-in-out infinite"></span>
+                              <span style="width:5px;height:5px;border-radius:9999px;background:var(--vds-element-secondary);animation:vzTypingDot 1.1s ease-in-out infinite;animation-delay:.15s"></span>
+                              <span style="width:5px;height:5px;border-radius:9999px;background:var(--vds-element-secondary);animation:vzTypingDot 1.1s ease-in-out infinite;animation-delay:.3s"></span>
+                            </span>
+                          </div>
+                        </sc-if>
+                        <sc-if value="{{ d.techFeaturesShown }}" hint-placeholder-val="{{ false }}">
+                        <div style="overflow-x:auto">
+                          <div style="min-width:640px;display:grid;grid-template-columns:150px repeat(4,minmax(140px,1fr));gap:0;border:1px solid var(--vds-border-subtle);border-radius:8px;overflow:hidden">
+                            <div style="grid-column:1/-1;display:grid;grid-template-columns:150px repeat(4,minmax(140px,1fr));gap:16px;padding:16px 20px;background:var(--vds-background-lowcontrast)">
+                              <span></span>
+                              <sc-for list="{{ d.compareHeads }}" as="ch2" hint-placeholder-count="4">
+                                <span style="display:flex;flex-direction:column;gap:6px">
+                                  <span style="font-size:13px;font-weight:700;color:#000">{{ ch2.name }}</span>
+                                  <button onClick="{{ ch2.act }}" style="align-self:flex-start;border:1px solid #000;background:#000;color:#fff;border-radius:9999px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer">Add to order</button>
+                                </span>
+                              </sc-for>
+                            </div>
+                            <sc-for list="{{ d.techSpecRows }}" as="tr" hint-placeholder-count="6">
+                              <div style="grid-column:1/-1;display:grid;grid-template-columns:150px repeat(4,minmax(140px,1fr));gap:16px;align-items:center;padding:14px 20px;border-top:1px solid var(--vds-border-subtle);background:#fff">
+                                <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">{{ tr.label }}</span>
+                                <sc-for list="{{ tr.cells }}" as="tc" hint-placeholder-count="4">
+                                  <span style="font-size:14px;color:#000">{{ tc }}</span>
+                                </sc-for>
+                              </div>
+                            </sc-for>
+                          </div>
+                        </div>
+                        </sc-if>
+                      </div>
+                    </sc-if>
+                <sc-if value="{{ showOrder }}">
+                  <section id="order-section" style="border: 1px solid var(--vds-border-subtle); border-radius: 8px; box-shadow: var(--vds-shadow-tile); padding: 28px 32px; display: flex; flex-direction: column; gap: 20px; animation: vzFormIn 220ms cubic-bezier(.4,0,.2,1) both; background-color: var(--vds-gray-100)">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
+                      <h2 style="margin:0;font-size:22px;line-height:27px;font-weight:700;letter-spacing:-.3px">{{ orderHeading }}</h2>
+                      <span style="font-size:14px;color:var(--vds-element-secondary)">{{ orderCount }}</span>
+                    </div>
+                    <sc-for list="{{ orderItems }}" as="oi" hint-placeholder-count="1">
+                      <div style="border:1px solid var(--vds-border-subtle);border-radius:8px;background:transparent;box-shadow:var(--vds-shadow-tile);display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr)">
+                        <div style="padding: 24px; display: flex; flex-direction: column; gap: 6px; border-right: 1px solid var(--vds-border-subtle); background-color: var(--vds-white)">
+                          <span style="display:block;width:100%;aspect-ratio:1/1;border-radius:8px;background:var(--vds-background-lowcontrast);background-image:url({{ oi.image }});background-size:contain;background-repeat:no-repeat;background-position:center"></span>
+                          <span style="margin-top:10px;font-size:17px;font-weight:700;color:#000">{{ oi.name }}</span>
+                          <span style="font-size:15px;font-weight:700;color:#000">{{ oi.price }}</span>
+                          <span style="font-size:13px;color:var(--vds-element-secondary)">Prefilled from your last order. Confirm or change.</span>
+                          <button onClick="{{ oi.remove }}" style="align-self:flex-start;margin-top:6px;border:0;background:transparent;color:#000;font-size:13px;text-decoration:underline;cursor:pointer;padding:0">Remove</button>
+                        </div>
+                        <div style="display:flex;flex-direction:column">
+                          <div style="padding: 24px 28px; border-bottom: 1px solid var(--vds-border-subtle); display: flex; flex-direction: column; gap: 14px; background-color: var(--vds-white)">
+                            <div style="display:flex;flex-direction:column;gap:2px">
+                              <h4 style="margin:0;font-size:17px;font-weight:700;color:#000">Color</h4>
+                              <span style="font-size:13px;color:var(--vds-element-secondary)">What color do you want?</span>
+                            </div>
+                            <div style="display:flex;flex-wrap:wrap;gap:8px">
+                              <sc-for list="{{ oi.colorSwatches }}" as="cs" hint-placeholder-count="3">
+                                <button onClick="{{ cs.pick }}" style="display:flex;align-items:center;gap:8px;border: {{ cs.border }};border-radius:9999px;background:#fff;padding:6px 12px 6px 6px;font-size:13px;font-weight: {{ cs.weight }};cursor:pointer">
+                                  <span style="width:16px;height:16px;border-radius:9999px;background: {{ cs.hex }};border:1px solid rgba(0,0,0,.15)"></span>{{ cs.value }}
+                                </button>
+                              </sc-for>
+                            </div>
+                          </div>
+                          <div style="padding: 24px 28px; border-bottom: 1px solid var(--vds-border-subtle); display: flex; flex-direction: column; gap: 14px; background-color: var(--vds-white)">
+                            <div style="display:flex;flex-direction:column;gap:2px">
+                              <h4 style="margin:0;font-size:17px;font-weight:700;color:#000">Storage</h4>
+                              <span style="font-size:13px;color:var(--vds-element-secondary)">How much space do you need?</span>
+                            </div>
+                            <div style="display:flex;flex-wrap:wrap;gap:8px">
+                              <sc-for list="{{ oi.storageChoices }}" as="sc0" hint-placeholder-count="3">
+                                <button onClick="{{ sc0.pick }}" style="border: {{ sc0.border }};border-radius:8px;background:#fff;padding:12px 20px;font-size:14px;font-weight: {{ sc0.weight }};cursor:pointer">{{ sc0.value }}</button>
+                              </sc-for>
+                            </div>
+                          </div>
+                          <div style="padding: 24px 28px; border-bottom: 1px solid var(--vds-border-subtle); display: flex; flex-direction: column; gap: 14px; background-color: var(--vds-white)">
+                            <div style="display:flex;flex-direction:column;gap:2px">
+                              <h4 style="margin:0;font-size:17px;font-weight:700;color:#000">Payment type</h4>
+                              <span style="font-size:13px;color:var(--vds-element-secondary)">How do you want to pay?</span>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:10px">
+                              <sc-for list="{{ oi.paymentChoices }}" as="pc" hint-placeholder-count="3">
+                                <button onClick="{{ pc.pick }}" style="text-align:left;border: {{ pc.border }};border-radius:8px;background:#fff;padding:14px 18px;cursor:pointer;display:flex;flex-direction:column;gap:2px">
+                                  <span style="font-size:15px;font-weight: {{ pc.weight }};color:#000">{{ pc.value }}</span>
+                                  <sc-if value="{{ pc.blurb }}"><span style="font-size:13px;color:var(--vds-element-secondary)">{{ pc.blurb }}</span></sc-if>
+                                </button>
+                              </sc-for>
+                            </div>
+                          </div>
+                          <div style="padding: 24px 28px; border-bottom: 1px solid var(--vds-border-subtle); display: flex; flex-direction: column; gap: 14px; background-color: var(--vds-white)">
+                            <div style="display:flex;flex-direction:column;gap:2px">
+                              <h4 style="margin:0;font-size:17px;font-weight:700;color:#000">Trade in your old device</h4>
+                              <span style="font-size:13px;color:var(--vds-element-secondary)">Credit applies against the device payment on each line.</span>
+                            </div>
+                            <div style="display:flex;flex-direction:column;gap:10px">
+                              <sc-for list="{{ oi.tradeinChoices }}" as="tc" hint-placeholder-count="2">
+                                <button onClick="{{ tc.pick }}" style="text-align:left;border: {{ tc.border }};border-radius:8px;background:#fff;padding:14px 18px;font-size:15px;font-weight: {{ tc.weight }};cursor:pointer">{{ tc.value }}</button>
+                              </sc-for>
+                            </div>
+                          </div>
+                          <div style="padding: 24px 28px; display: flex; flex-direction: column; gap: 14px; background-color: var(--vds-white)">
+                            <div style="display:flex;flex-direction:column;gap:2px">
+                              <h4 style="margin:0;font-size:17px;font-weight:700;color:#000">Quantity</h4>
+                              <span style="font-size:13px;color:var(--vds-element-secondary)">How many lines is this for?</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:14px">
+                              <button onClick="{{ oi.dec }}" style="width:36px;height:36px;border-radius:9999px;border:1px solid var(--vds-border-default);background:#fff;cursor:pointer;font-size:16px">–</button>
+                              <span style="font-size:16px;font-weight:700;min-width:16px;text-align:center">{{ oi.qty }}</span>
+                              <button onClick="{{ oi.inc }}" style="width:36px;height:36px;border-radius:9999px;border:1px solid var(--vds-border-default);background:#fff;cursor:pointer;font-size:16px">+</button>
+                              <button style="margin-left:8px;border:1px solid #000;background:#000;color:#fff;border-radius:9999px;padding:11px 24px;font-size:14px;font-weight:700;letter-spacing:.5px;cursor:pointer">Continue to plan details</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </sc-for>
+                    <div style="display:flex;align-items:center;gap:12px">
+                      <button onClick="{{ clearOrder }}" style="border:0;background:transparent;color:var(--vds-element-secondary);font-size:13px;text-decoration:underline;cursor:pointer">Clear order</button>
+                    </div>
+                  </section>
+                </sc-if>
+
+                    <sc-if value="{{ d.hasCompare }}" hint-placeholder-val="{{ false }}">
+                    <div style="border: 1px solid var(--vds-border-subtle); border-radius: 8px; box-shadow: var(--vds-shadow-tile); padding: 28px 32px; display: flex; flex-direction: column; gap: 16px; background-color: var(--vds-gray-100)">
+                    <h3 style="margin: 0; display: flex; align-items: center; gap: 8px; font-size: 22px; line-height: 31px; font-weight: 700; letter-spacing: -.4px; text-wrap: pretty; color: var(--vds-black)"><img src="uploads/AISparkle.svg" alt="" style="width:20px;height:20px;display:block;flex:none;filter:brightness(0)">What else do you want to know?</h3>
+                    <div style="display:flex;flex-wrap:wrap;gap:10px">
+                      <sc-if value="{{ d.showComparisonHidden }}" hint-placeholder-val="{{ true }}">
+                        <button onClick="{{ revealComparison }}" style="border:1px solid var(--vds-border-default);border-radius:9999px;background:#fff;padding:9px 18px;font-size:14px;color:#000;cursor:pointer" style-hover="background:rgba(0,0,0,.04)">Show me a comparison table</button>
+                      </sc-if>
+                      <sc-if value="{{ d.techFeaturesHidden }}" hint-placeholder-val="{{ true }}">
+                        <button onClick="{{ askCompareFeatures }}" style="border:1px solid var(--vds-border-default);border-radius:9999px;background:#fff;padding:9px 18px;font-size:14px;color:#000;cursor:pointer" style-hover="background:rgba(0,0,0,.04)">Show me a comparison of technical features</button>
+                      </sc-if>
+                      <button onClick="{{ askTotalCost }}" style="border:1px solid var(--vds-border-default);border-radius:9999px;background:#fff;padding:9px 18px;font-size:14px;color:#000;cursor:pointer" style-hover="background:rgba(0,0,0,.04)">Total cost over 36 months</button>
+                      <button onClick="{{ askOrder12 }}" style="border:1px solid var(--vds-border-default);border-radius:9999px;background:#fff;padding:9px 18px;font-size:14px;color:#000;cursor:pointer" style-hover="background:rgba(0,0,0,.04)">What if I order 12 now?</button>
+                      <button onClick="{{ askTradeIn }}" style="border:1px solid var(--vds-border-default);border-radius:9999px;background:#fff;padding:9px 18px;font-size:14px;color:#000;cursor:pointer" style-hover="background:rgba(0,0,0,.04)">Any trade-in credit on these?</button>
+                    </div>
+                    </div>
+                    </sc-if>
+              </section>
+            </sc-if>
+
+            <sc-if value="{{ d.hasUsageRows }}" hint-placeholder-val="{{ false }}">
+              <section style="padding:0 56px 30px">
+                <div style="overflow-x:auto">
+                  <div style="min-width:640px;border:1px solid var(--vds-border-subtle);border-radius:8px;overflow:hidden">
+                    <div style="display:grid;grid-template-columns:1.2fr 1.3fr 1.2fr .9fr 1fr;gap:16px;padding:14px 20px;background:var(--vds-background-lowcontrast)">
+                      <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Line</span>
+                      <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">User</span>
+                      <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Device</span>
+                      <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Data used</span>
+                      <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Status</span>
+                    </div>
+                    <sc-for list="{{ d.usageRows }}" as="ul" hint-placeholder-count="5">
+                      <div style="display:grid;grid-template-columns:1.2fr 1.3fr 1.2fr .9fr 1fr;gap:16px;align-items:center;padding:14px 20px;border-top:1px solid var(--vds-border-subtle);background:#fff">
+                        <span style="font-size:14px;font-weight:700;color:#000">{{ ul.line }}</span>
+                        <span style="font-size:14px;color:#000">{{ ul.user }}</span>
+                        <span style="font-size:13px;color:var(--vds-element-secondary)">{{ ul.device }}</span>
+                        <span style="font-size:14px;color:#000">{{ ul.dataPct }}</span>
+                        <span style="display:flex;align-items:center;gap:8px">
+                          <span style="flex:none;width:7px;height:7px;border-radius:9999px;background: {{ ul.dot }}"></span>
+                          <span style="font-size:13px;color:#000;white-space:nowrap">{{ ul.status }}</span>
+                        </span>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </section>
+            </sc-if>
+
+            <sc-if value="{{ d.hasActions }}">
+              <section style="padding:0 56px 30px;display:flex;flex-direction:column;gap:24px">
+              <sc-if value="{{ d.actionsHeading }}">
+                <h3 style="margin:0 0 -8px;font-size:20px;font-weight:700;color:#000;text-wrap:pretty">{{ d.actionsHeading }}</h3>
+              </sc-if>
+              <div style="border: 1px solid var(--vds-border-subtle); border-radius: 8px; box-shadow: var(--vds-shadow-tile); padding: 32px; display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 32px; background-color: var(--vds-gray-100)">
+                <sc-for list="{{ d.actions }}" as="ac" hint-placeholder-count="4">
+                  <div style="display:flex;flex-direction:column;align-items:flex-start;gap:14px">
+                    <span style="align-self:flex-start;border:1px solid #000;border-radius:9999px;padding:5px 12px;font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:#000;white-space:nowrap">{{ ac.tag }}</span>
+                    <span style="font-size:18px;line-height:23px;font-weight:700;color:#000">{{ ac.name }}</span>
+                    <span style="font-size:14px;line-height:20px;color:var(--vds-element-secondary);text-wrap:pretty">{{ ac.body }}</span>
+                    <button onClick="{{ ac.act }}" style="margin-top:auto;align-self:flex-start;border:1px solid var(--vds-border-default);border-radius:9999px;background:#fff;padding:9px 18px;font-size:13px;color:#000;cursor:pointer" style-hover="border-color:#000">{{ ac.cta }}</button>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-for list="{{ billActionDetails }}" as="bad" hint-placeholder-count="0">
+              <section id="bill-action-detail-{{ $index }}" style="border: 1px solid var(--vds-border-subtle); border-radius: 8px; box-shadow: var(--vds-shadow-tile); padding: 30px 32px; display: flex; flex-direction: column; gap: 20px; animation: vzFormIn 220ms cubic-bezier(.4,0,.2,1) both; position: relative; background-color: var(--vds-gray-100)">
+                <button onClick="{{ bad.dismiss }}" aria-label="Dismiss" style="position:absolute;top:20px;right:20px;border:0;background:transparent;cursor:pointer;padding:4px;color:var(--vds-element-secondary)" style-hover="color:#000">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="6" y1="6" x2="18" y2="18"></line><line x1="18" y1="6" x2="6" y2="18"></line></svg>
+                </button>
+                <h2 style="margin:0;padding-right:30px;font-size:26px;line-height:31px;font-weight:700;letter-spacing:-.4px;text-wrap:pretty">{{ bad.name }}</h2>
+                <sc-if value="{{ bad.isDispute }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;align-items:center;gap:16px;border:1px solid var(--vds-border-subtle);border-radius:8px;background:transparent;padding:16px 20px">
+                    <span style="flex:none;display:flex;align-items:center;justify-content:center;width:40px;height:50px;border:1px solid var(--vds-border-default);border-radius:4px;background:var(--vds-stone)">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.4"><path d="M6 3.5h8L18.5 8v12.5H6z"></path><path d="M13.6 3.6V8.2h4.7"></path><line x1="9" y1="13" x2="15" y2="13"></line><line x1="9" y1="16.5" x2="13" y2="16.5"></line></svg>
+                    </span>
+                    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+                      <span style="font-family:var(--vds-font-text);font-size:10px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Where this appeared</span>
+                      <span style="font-size:14px;font-weight:700;color:#000">August statement — Charges by line</span>
+                      <span style="font-size:13px;color:var(--vds-element-secondary)">Line ••3390 · Roaming · $140.00</span>
+                    </div>
+                    <button onClick="{{ viewAugustStatement }}" style="flex:none;border:1px solid var(--vds-border-default);background:#fff;color:#000;border-radius:9999px;padding:8px 16px;font-size:13px;cursor:pointer;white-space:nowrap" style-hover="border-color:#000">View statement</button>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ bad.isPlan }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:20px">
+                    <div style="display:flex;flex-direction:column;gap:2px">
+                      <h3 style="margin: 0; font-size: 15px; line-height: 31px; font-weight: 400; letter-spacing: -.4px; text-wrap: pretty">Lines hitting overage this month</h3>
+                    </div>
+                    <div style="border:1px solid var(--vds-border-subtle);border-radius:8px;overflow:hidden">
+                      <sc-for list="{{ planLines }}" as="pl" hint-placeholder-count="2">
+                        <div style="display:grid;grid-template-columns:1.2fr 1.4fr .9fr;gap:16px;align-items:center;padding:16px 20px;border-bottom:1px solid var(--vds-border-subtle);background:#fff">
+                          <span style="font-size:14px;font-weight:700;color:#000">{{ pl.line }}</span>
+                          <span style="display:flex;flex-direction:column;gap:2px">
+                            <span style="font-size:14px;color:#000">{{ pl.user }}</span>
+                            <span style="font-size:12px;color:var(--vds-element-secondary)">{{ pl.plan }}</span>
+                          </span>
+                          <span style="font-size:14px;font-weight:700;color:var(--vds-brand-red)">{{ pl.overage }} overage</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:2px">
+                      <h3 style="margin:0;font-size:26px;line-height:31px;font-weight:700;letter-spacing:-.4px;text-wrap:pretty">Upgrade option for both lines</h3>
+                    </div>
+                    <div style="display:grid;grid-template-columns:150px repeat(2,minmax(160px,1fr));gap:16px;border:1px solid var(--vds-border-subtle);border-radius:8px;overflow:hidden">
+                      <div style="grid-column:1/-1;display:grid;grid-template-columns:150px repeat(2,minmax(160px,1fr));gap:16px;padding:16px 20px;background:var(--vds-background-lowcontrast)">
+                        <span></span>
+                        <span style="font-size:13px;font-weight:700;color:#000">Current plan</span>
+                        <span style="font-size:13px;font-weight:700;color:#000">Unlimited Plus</span>
+                      </div>
+                      <sc-for list="{{ planCompareRows }}" as="pr" hint-placeholder-count="4">
+                        <div style="grid-column:1/-1;display:grid;grid-template-columns:150px repeat(2,minmax(160px,1fr));gap:16px;align-items:center;padding:14px 20px;border-top:1px solid var(--vds-border-subtle);background:#fff">
+                          <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">{{ pr.label }}</span>
+                          <span style="font-size:14px;color:#000">{{ pr.current }}</span>
+                          <span style="font-size:14px;font-weight:700;color:#008331">{{ pr.upgrade }}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                    <p style="margin:0;font-size:15px;line-height:23px;color:#000;max-width:64ch;text-wrap:pretty">{{ bad.detail }}</p>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ bad.isAlert }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:16px">
+                    <p style="margin:0;font-size:15px;line-height:23px;color:#000;max-width:64ch;text-wrap:pretty">Alert user when line reaches 80% of data limit. All lines are selected by default — deselect any line you don't want alerts for.</p>
+                    <div style="border:1px solid var(--vds-border-subtle);border-radius:8px;overflow:hidden">
+                      <sc-for list="{{ alertLines }}" as="al" hint-placeholder-count="5">
+                        <button onClick="{{ al.toggle }}" style="display:grid;grid-template-columns:32px 1.2fr 1.4fr;gap:16px;align-items:center;padding:14px 20px;border:0;border-bottom:1px solid var(--vds-border-subtle);background:#fff;width:100%;cursor:pointer;text-align:left">
+                          <span style="width:18px;height:18px;border-radius:4px;border:1.5px solid #000;background: {{ al.bg }};display:flex;align-items:center;justify-content:center">
+                            <sc-if value="{{ al.selected }}">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"></path></svg>
+                            </sc-if>
+                          </span>
+                          <span style="font-size:14px;font-weight:700;color:#000">{{ al.line }}</span>
+                          <span style="font-size:13px;color:var(--vds-element-secondary)">{{ al.user }} — alert at 80% of data limit</span>
+                        </button>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ bad.isUsage }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:16px">
+                    <p style="margin:0;font-size:15px;line-height:23px;color:#000;max-width:64ch;text-wrap:pretty">{{ bad.detail }}</p>
+                    <div style="overflow-x:auto">
+                      <div style="min-width:640px;border:1px solid var(--vds-border-subtle);border-radius:8px;overflow:hidden">
+                        <div style="display:grid;grid-template-columns:1.2fr 1.3fr 1.2fr .9fr 1fr;gap:16px;padding:14px 20px;background:var(--vds-background-lowcontrast)">
+                          <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Line</span>
+                          <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">User</span>
+                          <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Device</span>
+                          <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Data used</span>
+                          <span style="font-family:var(--vds-font-text);font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--vds-element-secondary)">Status</span>
+                        </div>
+                        <sc-for list="{{ usageLines }}" as="ul" hint-placeholder-count="5">
+                          <div style="display:grid;grid-template-columns:1.2fr 1.3fr 1.2fr .9fr 1fr;gap:16px;align-items:center;padding:14px 20px;border-top:1px solid var(--vds-border-subtle);background:#fff">
+                            <span style="font-size:14px;font-weight:700;color:#000">{{ ul.line }}</span>
+                            <span style="font-size:14px;color:#000">{{ ul.user }}</span>
+                            <span style="font-size:13px;color:var(--vds-element-secondary)">{{ ul.device }}</span>
+                            <span style="font-size:14px;color:#000">{{ ul.dataPct }}</span>
+                            <span style="display:flex;align-items:center;gap:8px">
+                              <span style="flex:none;width:7px;height:7px;border-radius:9999px;background: {{ ul.dot }}"></span>
+                              <span style="font-size:13px;color:#000;white-space:nowrap">{{ ul.status }}</span>
+                            </span>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ bad.isGeneric }}" hint-placeholder-val="{{ false }}">
+                  <p style="margin:0;font-size:15px;line-height:23px;color:#000;max-width:64ch;text-wrap:pretty">{{ bad.detail }}</p>
+                </sc-if>
+                <button onClick="{{ openChat }}" style="align-self:flex-start;border:1px solid #000;background:#000;color:#fff;border-radius:9999px;padding:11px 24px;font-size:14px;font-weight:700;letter-spacing:.5px;cursor:pointer">{{ bad.detailCta }}</button>
+              </section>
+              </sc-for>
+               <div style="border: 1px solid var(--vds-border-subtle); border-radius: 8px; box-shadow: var(--vds-shadow-tile); padding: 28px 32px; display: flex; flex-direction: column; gap: 12px; background-color: var(--vds-gray-100)">
+                 <h3 style="margin: 0; display: flex; align-items: center; gap: 10px; font-size: 22px; line-height: 31px; font-weight: 700; letter-spacing: -.4px; text-wrap: pretty"><img src="uploads/AISparkle.svg" alt="" style="width:22px;height:22px;display:block;flex:none;filter:brightness(0)">{{ d.actionsFollowUpTitle }}</h3>
+                 <div style="display:flex;flex-wrap:wrap;gap:10px">
+                 <sc-for list="{{ d.actionsFollowUpPrompts }}" as="afp" hint-placeholder-count="4">
+                   <button onClick="{{ afp.ask }}" style="border:1px solid var(--vds-border-default);border-radius:9999px;background:#fff;padding:9px 18px;font-size:14px;color:#000;cursor:pointer" style-hover="background:rgba(0,0,0,.04)">{{ afp.label }}</button>
+                 </sc-for>
+                 </div>
+               </div>
+              </section>
+            </sc-if>
+
+            <sc-if value="{{ d.showFollowUpCard }}">
+              <section style="padding:0 56px 30px">
+                <div style="border: 1px solid var(--vds-border-subtle); border-radius: 8px; box-shadow: var(--vds-shadow-tile); padding: 28px 32px; display: flex; flex-direction: column; gap: 12px; background-color: var(--vds-gray-100)">
+                  <h3 style="margin: 0; display:flex; align-items:center; gap:8px; font-size: 22px; line-height: 31px; font-weight: 700; letter-spacing: -.4px; text-wrap: pretty"><img src="uploads/AISparkle.svg" alt="" style="width:20px;height:20px;display:block;flex:none;filter:brightness(0)">Is there anything else you want to know?</h3>
+                  <div style="display:flex;flex-wrap:wrap;gap:10px">
+                    <sc-for list="{{ d.followUpPrompts }}" as="fp" hint-placeholder-count="2">
+                      <button onClick="{{ fp.ask }}" style="border:1px solid var(--vds-border-default);border-radius:9999px;background:#fff;padding:9px 18px;font-size:14px;color:#000;cursor:pointer" style-hover="background:rgba(0,0,0,.04)">{{ fp.label }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+              </section>
+            </sc-if>
+
+          </sc-for>
+
+        </div>
+      </div>
+</x-dc>
