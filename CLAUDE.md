@@ -7,12 +7,32 @@ files directly. The design system lives in `_ds/verizon-business-design-system-*
 pulled from Figma.
 
 ## File map
-- `Portal Interaction Model.dc.html` — the client-facing deliverable. Treat as production.
+- `Portal Interaction Model.dc.html` — the client-facing deliverable (the root page). Treat as
+  production.
+- `*.dc.html` at repo root other than the file above (e.g. `DemoProfilePicker.dc.html`) — split-out
+  components, loaded at runtime via `<dc-import name="...">` from the root file or from each
+  other. Must stay **flat in the repo root** — the runtime resolves `dc-import` names as
+  `./Name.dc.html` and can't follow a `/` into a subfolder.
+- `persona-data.js` — plain data file (`window.PERSONAS`), see its own header comment for the
+  widget glossary and how to add/edit a persona.
 - `_ds/` — design system tokens/components synced from Figma. **Generated, not hand-edited.**
 - `assets/` — device mockups and brand assets (images/SVGs).
 - `scraps/` — scratch/working images (dispute-flow checks, canvases, etc). Free-for-all.
 - `uploads/` — working wireframes, pasted screenshots, reference docs. Free-for-all.
-- `support.js`, `image-slot.js` — prototype interaction logic.
+- `support.js`, `image-slot.js` — prototype interaction logic. **Generated/vendored, not
+  hand-edited** (`support.js` header says as much — it's the dc-runtime that parses all the
+  `.dc.html` files).
+
+## Running it locally
+As of the first `dc-import` split, opening the file by double-clicking it (`file://`) no
+longer renders correctly — the browser blocks `fetch` on `file://`, so any imported piece
+renders as an empty box and logs a `[dc-runtime] sibling fetch ... failed` error. You need a
+local static server:
+- **No terminal (recommended for non-devs):** install the VS Code "Live Server" extension (or
+  use the built-in "Live Preview"), right-click `Portal Interaction Model.dc.html` → **Open
+  with Live Server**. One click.
+- **Terminal:** `python3 -m http.server 8080` from the repo root, then open
+  `http://localhost:8080/Portal%20Interaction%20Model.dc.html`.
 
 ## Team
 Mixed group of designers and developers collaborating directly in this repo. Nobody should
@@ -66,13 +86,19 @@ expect real git merge conflicts, not just noise. When resolving one, re-verify e
 carefully — a clean merge doesn't mean the resulting markup/logic is still correct. See
 "Modularization" below — the plan is to split this file precisely to shrink this risk.
 
-## Modularization (planned, not yet done)
-The single 3000+ line `.dc.html` file is the main reason concurrent edits collide. The
-runtime supports splitting markup into separate files via `dc-import`, but that requires
-`fetch`, which means the prototype can no longer be opened by double-clicking the file — it
-needs a local static server running. That tradeoff (simplicity of `file://` vs. fewer merge
-conflicts) needs to be planned deliberately before it's implemented — ask Claude to scope it
-as a plan rather than diving straight into code.
+## Modularization (in progress, staged)
+The single 3000+ line `.dc.html` file is the main reason concurrent edits collide. Splitting
+it via `dc-import` is happening incrementally, not all at once (no tests exist, so a big-bang
+split has no way to catch a regression):
+- **Done:** the demo profile picker modal → `DemoProfilePicker.dc.html` (proved the mechanism
+  + local-server workflow on something low-risk).
+- **Next:** the drill-down detail area (`showDrill`, ~a third of the file, already isolated
+  behind its own `drillVals()` method) → `DrillDetail.dc.html` — the extraction that actually
+  matters for file size.
+- **Deferred until they become a real pain point:** the dashboard/persona canvas widgets, the
+  section-page shells, the chat panel. Don't split these preemptively — wait until growth
+  (more personas, more widgets) makes them a recurring conflict source, then ask Claude to
+  scope that specific split.
 
 ## Working with Claude/agents on this project
 - Ask before editing `_ds/` or the `.dc.html` deliverable directly — prefer proposing the
