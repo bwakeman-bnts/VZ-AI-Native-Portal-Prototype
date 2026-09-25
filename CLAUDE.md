@@ -34,32 +34,49 @@ Figma is the source of truth for visual design. When a design changes:
 - `scraps/` and `uploads/` — scratch, no restrictions.
 
 ## Git & PR workflow (plain-language version)
-This team isn't dev-heavy, so here's the workflow spelled out step by step. The goal: nobody's
-work gets silently overwritten, and one other set of eyes sees a change before it hits `main`.
+Nobody on this team is a dev, and nobody is going to line-by-line review generated code — so
+this workflow does NOT rely on human review as the safety net. Instead: every change goes
+through a branch + PR (so nothing lands via a stray direct push, and there's always a
+reviewable diff in GitHub's history), but **PRs are self-merged by whichever Claude session
+opened them, once that session has actually run the prototype and confirmed the change
+works** — not just "no merge conflicts, ship it."
 
-**Everyday steps, for a human or an agent making a change:**
+Branch protection on `main` reflects this exactly: **PR required, 0 approvals required.**
+Force-push and branch deletion are still blocked.
+
+**Steps, for a human or an agent making a change:**
 1. **Before starting**, make sure you're up to date: `git checkout main && git pull`.
 2. **Create a branch** for your change, named like `yourname/short-description`
    (e.g. `ben/fix-dispute-flow-copy`).
-3. **Make your edits**, then save them as a commit with a message describing *why*, not just
-   *what* (e.g. "Fix dispute flow copy per legal review" not "update text").
-4. **Push the branch** to GitHub: `git push -u origin yourname/short-description`.
-5. **Open a Pull Request (PR)** on GitHub comparing your branch to `main`. Add a short
-   description of what changed and why.
-6. **Get one teammate to review and approve** the PR before merging — even a quick "looks
-   good" comment counts. This is the safety net that catches mistakes before they reach the
-   deliverable.
-7. **Merge the PR** (use "Squash and merge" to keep history clean), then delete the branch.
+3. **Make your edits**, commit with a message describing *why*, not just *what*.
+4. **Push the branch**, open a PR describing what changed and why.
+5. **Verify by actually running it** — open the prototype in a browser, click through the
+   change (not just the one screen it touched), check the console for new errors/warnings.
+   Screenshot if it's a visual change. This step is not optional; it's what replaces human
+   review here.
+6. **Merge the PR yourself** (squash merge) once verified, then delete the branch.
 
-**What NOT to do:** don't commit straight to `main`, and don't force-push. If you're not sure
-whether a change is big enough to need a PR, default to using one — it's cheap insurance.
+**What NOT to do:** don't commit straight to `main`, don't force-push, and don't merge a PR
+you haven't actually run and checked — an unreviewed diff with no verification either is the
+one thing this process can't catch.
 
-**One-time setup recommended for whoever admins the GitHub repo:** turn on branch protection
-for `main` (Settings → Branches → require a PR + 1 approval before merging). That makes the
-PR step unskippable rather than just a convention.
+**Concurrent-edit risk:** this repo is still mostly one large file
+(`Portal Interaction Model.dc.html`). If two branches touch the same section at the same time,
+expect real git merge conflicts, not just noise. When resolving one, re-verify extra
+carefully — a clean merge doesn't mean the resulting markup/logic is still correct. See
+"Modularization" below — the plan is to split this file precisely to shrink this risk.
+
+## Modularization (planned, not yet done)
+The single 3000+ line `.dc.html` file is the main reason concurrent edits collide. The
+runtime supports splitting markup into separate files via `dc-import`, but that requires
+`fetch`, which means the prototype can no longer be opened by double-clicking the file — it
+needs a local static server running. That tradeoff (simplicity of `file://` vs. fewer merge
+conflicts) needs to be planned deliberately before it's implemented — ask Claude to scope it
+as a plan rather than diving straight into code.
 
 ## Working with Claude/agents on this project
 - Ask before editing `_ds/` or the `.dc.html` deliverable directly — prefer proposing the
   change and letting a human confirm, or opening a PR for it.
 - Prefer the Figma MCP skills for anything visual rather than hand-authoring CSS/markup that
   approximates a design.
+- Always verify by running the prototype before merging a PR — see the workflow above.
