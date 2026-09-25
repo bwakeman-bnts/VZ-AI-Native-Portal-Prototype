@@ -15,6 +15,9 @@ pulled from Figma.
   `./Name.dc.html` and can't follow a `/` into a subfolder.
 - `persona-data.js` — plain data file (`window.PERSONAS`), see its own header comment for the
   widget glossary and how to add/edit a persona.
+- `ARCHITECTURE.md` — the **product** pattern (Persona/Widget/Journey vocabulary, how the
+  chat panel and canvas are supposed to relate). Read this before adding a persona, widget,
+  or scripted agent/canvas interaction — this file (`CLAUDE.md`) is process only.
 - `_ds/` — design system tokens/components synced from Figma. **Generated, not hand-edited.**
 - `assets/` — device mockups and brand assets (images/SVGs).
 - `scraps/` — scratch/working images (dispute-flow checks, canvases, etc). Free-for-all.
@@ -90,11 +93,9 @@ carefully — a clean merge doesn't mean the resulting markup/logic is still cor
 The single 3000+ line `.dc.html` file is the main reason concurrent edits collide. Splitting
 it via `dc-import` is happening incrementally, not all at once (no tests exist, so a big-bang
 split has no way to catch a regression):
-- **Done:** the demo profile picker modal → `DemoProfilePicker.dc.html` (proved the mechanism
-  + local-server workflow on something low-risk).
-- **Next:** the drill-down detail area (`showDrill`, ~a third of the file, already isolated
-  behind its own `drillVals()` method) → `DrillDetail.dc.html` — the extraction that actually
-  matters for file size.
+- **Done:** the demo profile picker modal → `DemoProfilePicker.dc.html`, and the drill-down
+  detail area → `DrillDetail.dc.html` (the root file went from ~3020 to ~2475 lines across
+  the two).
 - **Deferred until they become a real pain point:** the dashboard/persona canvas widgets, the
   section-page shells, the chat panel. Don't split these preemptively — wait until growth
   (more personas, more widgets) makes them a recurring conflict source, then ask Claude to
@@ -106,3 +107,15 @@ split has no way to catch a regression):
 - Prefer the Figma MCP skills for anything visual rather than hand-authoring CSS/markup that
   approximates a design.
 - Always verify by running the prototype before merging a PR — see the workflow above.
+- **Read `ARCHITECTURE.md` before adding/changing a persona, widget, or scripted agent/canvas
+  interaction.** When a maker prompts a change:
+  1. Classify it first (persona/widget/journey data edit vs. something new) and say which one
+     out loud before implementing.
+  2. If it fits an existing recipe, apply it using existing naming/conventions — don't
+     improvise a parallel mechanism for something the model already covers.
+  3. **Enforce the model as a guardrail, not a suggestion.** If a request doesn't cleanly
+     fit — implies real text understanding, breaks cross-persona consistency, or needs a
+     one-off exception — don't implement it. Stop, explain what breaks, and require explicit
+     confirmation before writing anything that creates the inconsistency.
+  4. **Teach as you go** — briefly explain which part of the system a change touched and why,
+     so makers get better at prompting future changes themselves.
