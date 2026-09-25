@@ -21,8 +21,8 @@ personas — not to make it more dynamic.
 
 ### Persona
 `persona-data.js` (`window.PERSONAS`) — a data-defined role: identity/copy fields (name,
-role, greeting, etc.) plus an ordered `canvas` list of Widget names, and (once Journeys are
-implemented — see below) a `journeys` list. Answers: **what does this person see.**
+role, greeting, etc.) plus an ordered `canvas` list of Widget names. Answers: **what does
+this person see.**
 
 ### Widget
 One named, `hasWidget('name')`-gated markup block in the canvas region of
@@ -31,7 +31,7 @@ their `canvas` array. It can read persona-specific copy via `{{ persona.* }}`. I
 extracted into its own file via `dc-import` once it's large or shared enough to be worth it
 (see `CLAUDE.md`'s modularization criteria — size/conflict-driven, not preemptive).
 
-### Journey *(target pattern — see "Current build status" below)*
+### Journey
 One named, fully scripted moment where the agent and canvas visibly react to each other.
 **A Journey is always started by an explicit click** — a suggested-prompt chip, a button, a
 canvas CTA — **never by parsing text typed into the chat composer.** The composer stays live
@@ -39,32 +39,43 @@ canvas CTA — **never by parsing text typed into the chat composer.** The compo
 Journey and never changes canvas content; it always gets a reply drawn from a small rotating
 pool of generic, warm acknowledgment lines, purely so the composer feels alive.
 
-Shared catalog (`journeys.js`, `window.JOURNEYS`) plus a per-persona opt-in list, mirroring
-the Persona/Widget pattern exactly:
+Shared catalog: `journeys.js`, `window.JOURNEYS`, keyed by id (see its own header comment for
+the full field reference):
 
 ```js
-// journeys.js — shared catalog, keyed by id
 window.JOURNEYS = {
   "roaming-dispute": {
-    canvasTopic: "Billing breakdown",
+    canvasTopic: "Billing breakdown",       // human label, used for the "recents" history entry
     reply: "We found the $140 roaming charge on line ••3390...",
-    followUp: { delayMs: 900, text: "...", prompts: ["...", "..."] },
-    notify: "We've flagged the $140 roaming charge for review."
-    // ^ the scripted line the agent "says" when this Journey is started from a canvas
-    //   control instead of a chat chip — see conductorNotify below.
+    replyTaskCard: true,                     // renders the special task-card widget in chat
+    notify: "We've flagged the $140 roaming charge for review.",
+    // ^ scripted line the agent "says" when started from a canvas control (conductorNotify)
+    //   instead of a chat chip — falls back to `reply` if omitted.
+    followUp: {
+      delayMs: 900,                          // omit delayMs+text to reveal prompts immediately
+      text: "...",
+      prompts: [
+        { label: "Yes, show me the offer", journey: "device-offer" },  // starts another Journey
+        { label: "How else might we save money?" }                    // plain generic reply
+      ]
+    }
   }
 };
 ```
-```js
-// persona-data.js — each persona opts into a subset of the shared catalog
-p2: { ..., journeys: ["roaming-dispute"] }
-```
 
-### Conductor helpers *(target pattern)*
+**Not yet enforced:** the vocabulary above sketched a per-persona `journeys: [...]` opt-in
+list (mirroring `canvas`), but this isn't implemented — today a Journey is reachable from
+wherever its triggering chip/button/CTA is placed, which happens to already be
+persona-specific since it lives inside that persona's own widgets. Add the formal
+`persona.journeys` list (and have `runJourney` check it) if/when there's an actual case of a
+Journey needing to be restricted independent of where its trigger appears.
+
+### Conductor helpers
 The fixed, small vocabulary every trigger point uses, so nothing gets bespoke one-off logic:
-- **`runJourney(id)`** — the *only* way a Journey starts. Called from a chip, a button, or a
-  canvas widget's CTA. Sets canvas state and queues the scripted reply (same "thinking" delay
-  pattern already used today).
+- **`runJourney(id, opts)`** — the *only* way a Journey starts. `opts.label` for a chat-side
+  trigger (chip/button — shows as if the user said `label`), or `opts.fromCanvas: true` for a
+  canvas-side trigger (no user bubble; goes straight to `conductorNotify`). Sets canvas state
+  and queues the scripted reply (same "thinking" delay pattern already used today).
 - **`conductorNotify(text)`** — used internally by `runJourney` when a Journey is triggered
   from a canvas control, to push its scripted `notify` line into the chat panel. This is how
   clicking something in the canvas visibly makes the agent panel "react" — still entirely
@@ -79,13 +90,15 @@ at rest," Journey is "what happens when they click something." A widget's CTA ca
 dedicated card.
 
 ## Current build status
-- **Persona and Widget**: real, working, in production use (`persona-data.js`,
-  `hasWidget()`-gated sections in `Portal Interaction Model.dc.html`).
-- **Journey, `runJourney()`, `conductorNotify()`, `journeys.js`**: **not yet built.** The
-  chat panel today still uses inline `isDispute`/`isOffer` regex-matching on typed chat text
-  in `push()` (`Portal Interaction Model.dc.html`) — which is exactly the pattern this
-  document replaces. Refactoring that into the Journey model is a recommended next step, not
-  yet done. Don't assume `runJourney`/`journeys.js` exist until that refactor lands.
+- **Persona, Widget, and Journey**: all real, working, in production use. `persona-data.js`
+  and `journeys.js` hold the data; `hasWidget()`-gated sections and `runJourney()`/
+  `conductorNotify()` (`Portal Interaction Model.dc.html`) are the mechanism. The chat
+  composer's free-text path (`push()`) never inspects message content — it only replies from
+  `GENERIC_CHAT_REPLIES` and never touches canvas state, exactly per the model above.
+- Two Journeys exist today: `roaming-dispute` and `device-offer` (both scoped to the
+  Accounts Payable persona's demo flow). `conductorNotify()` exists and is ready to use, but
+  no canvas widget calls it yet (`runJourney(id, { fromCanvas: true })`) — that's a natural
+  next Journey to add, not a gap in the mechanism itself.
 
 ## Forward-looking note: a future real LLM
 Not built now, but worth designing toward: because Journeys are a finite, named, data-driven
@@ -121,9 +134,9 @@ When a maker prompts a change:
 2. **Add a widget** — author markup gated by `hasWidget('name')`, list it in the relevant
    persona(s)' `canvas`, add it to the glossary comment at the top of `persona-data.js`.
    Extract to `dc-import` only per `CLAUDE.md`'s size/conflict criteria.
-3. **Add a Journey** *(once the refactor below lands)* — add an entry to `journeys.js`; list
-   its id in whichever persona(s)' `journeys` array should offer it; wire the triggering
-   chip/button/CTA to call `runJourney(id)`.
+3. **Add a Journey** — add an entry to `journeys.js`; wire the triggering chip/button/CTA to
+   call `runJourney(id, { label })` (chat-side) or `runJourney(id, { fromCanvas: true })`
+   (canvas-side).
 4. **Make a canvas widget "notify" the agent panel** — give its Journey a `notify` line; the
    widget's CTA calls `runJourney(id)` exactly like a chat chip would.
 5. **Visual/design changes** — reuse existing design tokens (`var(--vds-*)`) and animation
@@ -132,9 +145,20 @@ When a maker prompts a change:
    still flow through the Figma sync workflow in `CLAUDE.md`.
 6. **Split a file further** — only per the size/conflict criteria already in `CLAUDE.md`.
 
-## Recommended next step (not done yet)
-Refactor the existing `push()`/`isDispute`/`isOffer` chat logic into `journeys.js` +
-`runJourney()`/`conductorNotify()`/`GENERIC_CHAT_REPLIES`, matching the Journey model above.
-Real code change with regression risk — propose it as its own PR once this vocabulary is
-confirmed working for the team, the same staged approach used for the file modularization
-work.
+## Rule: extract data/content out of the interface for every dynamic surface
+Any content that varies — by persona, by which Journey is active, or (later) by what a real
+LLM decides — must live in a data file (`persona-data.js`, `journeys.js`, and any future
+equivalents), not hardcoded inline in markup or buried inside a handler. Markup and script
+logic should describe *structure and mechanism* (how a widget is laid out, how a Journey is
+triggered); data files hold the *content* (copy, which widgets/Journeys apply to whom).
+
+This is what keeps this system evolvable without becoming rigid: adding a persona, a widget,
+or a Journey should almost always be a data-file edit using an existing mechanism, not new
+markup logic. If a request would require hardcoding new branching logic instead of adding a
+data entry, that's the "doesn't cleanly fit" signal in "How Claude should apply this" above —
+stop and ask before writing it, since it likely means the data shape itself needs to grow
+(a new field on a Persona/Journey) rather than a one-off exception in the code.
+
+Static, universal chrome that's genuinely the same for everyone (nav labels, structural
+copy that never varies) is fine to leave inline — this rule is about content that's *meant*
+to differ or change over time, not everything in the file.

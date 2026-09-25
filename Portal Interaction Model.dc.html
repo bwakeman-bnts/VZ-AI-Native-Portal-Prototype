@@ -13,6 +13,7 @@
 <script src="_ds/verizon-business-design-system-4f8be1bd-7c8c-4701-9725-61efe2128025/_ds_bundle.js"></script>
 <script src="./image-slot.js"></script>
 <script src="./persona-data.js"></script>
+<script src="./journeys.js"></script>
 <style>
 html,body{margin:0;padding:0;background:#fff;font-family:"Verizon NHG eDS","Arial",sans-serif;color:#000}
 *{box-sizing:border-box}
@@ -1205,6 +1206,12 @@ input,textarea{font-family:inherit}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;startInChat&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Initial state&quot;},&quot;railCollapsed&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Initial state&quot;}}">
 const ACTIVE = "rgba(0,0,0,.06)";
+const GENERIC_CHAT_REPLIES = [
+  "Got it — let me take a look.",
+  "Good question. Let me check on that.",
+  "One sec, pulling that together.",
+  "Noted — I'll keep that in mind.",
+];
 const TASKS = [
   { label: "Reconciling June invoice line charges", status: "running" },
   { label: "Upgrade eligibility check — 42 lines", status: "running" },
@@ -1573,16 +1580,6 @@ class Component extends DCLogic {
     };
   }
 
-  canvasFor(text) {
-    const t = (text || "").toLowerCase();
-    if (/bill|invoice|charge|statement|pay/.test(t)) return "Billing breakdown";
-    if (/device|phone|upgrade|shop|iphone|tablet/.test(t)) return "Device options";
-    if (/line|plan|activate|sim/.test(t)) return "Lines and plans";
-    if (/outage|ticket|case|support|issue/.test(t)) return "Open cases";
-    if (/usage|report|data/.test(t)) return "Usage report";
-    return "Suggested next steps";
-  }
-
   slug(label) {
     return "anchor-" + String(label).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   }
@@ -1611,7 +1608,8 @@ class Component extends DCLogic {
   closeAssistant() {
     this.setState((p) => {
       if (p.canvas === "carryover") return { chatOpen: false };
-      const label = p.lastAsk || p.canvas;
+      const j = window.JOURNEYS && window.JOURNEYS[p.canvas];
+      const label = (j && j.canvasTopic) || p.canvas;
       const prior = (p.recents || TASKS).filter((t) => t.label !== label);
       return {
         chatOpen: false,
@@ -1621,35 +1619,69 @@ class Component extends DCLogic {
     });
   }
 
+  // Free text typed into the composer never starts a Journey and never
+  // changes the canvas — it always gets a generic, rotating acknowledgment.
+  // See ARCHITECTURE.md: Journeys are only ever started by an explicit click.
   push(text) {
     const clean = (text || "").trim();
     if (!clean) return;
-    const canvas = this.canvasFor(clean);
-    const isDispute = /dispute/i.test(clean) && /roaming/i.test(clean);
-    const isOffer = /show me the offer/i.test(clean);
-    const firstReply = isDispute ? "Pulling that up on the canvas — I've submitted a dispute for that roaming charge. You can see where that charge occurred in the August statement I've provided as well." : isOffer ? "Here's your offer. This takes into account your negotiated rates and special loyalty pricing." : "Pulling that up on the canvas — " + canvas.toLowerCase() + " is on the right.";
     this.setState((s) => ({ draft: "", chatOpen: true, messages: s.messages.concat({ role: "user", text: clean }), thinking: true, disputeCardExpanded: false, disputeCardCancelled: false }));
+    clearTimeout(this._thinkTimer1);
+    clearTimeout(this._thinkTimer2);
+    const genericIdx = this._genericReplyIdx || 0;
+    const reply = GENERIC_CHAT_REPLIES[genericIdx % GENERIC_CHAT_REPLIES.length];
+    this._genericReplyIdx = genericIdx + 1;
+    this._thinkTimer1 = setTimeout(() => {
+      this.setState((s) => ({ thinking: false, messages: s.messages.concat({ role: "ai", text: reply }) }));
+    }, 900);
+  }
+
+  // The only way a Journey starts. Call from a chip/button (pass `label`,
+  // the text to show as if the user said it) or from a canvas-side control
+  // (pass `fromCanvas: true` — no user bubble, agent reacts proactively via
+  // conductorNotify). See ARCHITECTURE.md.
+  runJourney(id, opts) {
+    const j = window.JOURNEYS && window.JOURNEYS[id];
+    if (!j) return;
+    opts = opts || {};
+    if (opts.fromCanvas) {
+      this.conductorNotify(j.notify || j.reply, id);
+      return;
+    }
+    const label = opts.label || j.canvasTopic;
+    this.setState((s) => ({ draft: "", chatOpen: true, messages: s.messages.concat({ role: "user", text: label }), thinking: true, disputeCardExpanded: false, disputeCardCancelled: false }));
     clearTimeout(this._thinkTimer1);
     clearTimeout(this._thinkTimer2);
     this._thinkTimer1 = setTimeout(() => {
       this.setState((s) => ({
-        lastAsk: clean,
-        canvas,
-        thinking: isDispute,
-        messages: s.messages.concat({ role: "ai", text: firstReply, taskCard: isDispute })
+        canvas: id,
+        thinking: !!(j.followUp && j.followUp.delayMs),
+        messages: s.messages.concat({ role: "ai", text: j.reply, taskCard: !!j.replyTaskCard })
       }));
-      if (isDispute) {
-        this._thinkTimer2 = setTimeout(() => {
-          this.setState((s) => ({
-            thinking: false,
-            messages: s.messages.concat({ role: "ai", text: "We noticed your company's headcount is growing. You can save $420.00 if you buy a bundle of 10 new lines. Want me to show you an offer to share with your procurement lead?" }),
-            chatPrompts: ["Yes, show me the offer", "How else might we save money?", "Not right now"]
-          }));
-        }, 900);
-      } else if (isOffer) {
-        this.setState({ chatPrompts: ["Share with procurement lead", "Add lines to my order", "No thanks"] });
+      if (j.followUp) {
+        if (j.followUp.delayMs) {
+          this._thinkTimer2 = setTimeout(() => {
+            this.setState((s) => ({
+              thinking: false,
+              messages: j.followUp.text ? s.messages.concat({ role: "ai", text: j.followUp.text }) : s.messages,
+              chatPrompts: j.followUp.prompts || null
+            }));
+          }, j.followUp.delayMs);
+        } else {
+          this.setState({ chatPrompts: j.followUp.prompts || null });
+        }
       }
     }, 900);
+  }
+
+  // How a canvas-side control makes the agent panel visibly react, without
+  // the user having typed/clicked anything in chat first.
+  conductorNotify(text, journeyId) {
+    this.setState((s) => ({
+      chatOpen: true,
+      canvas: journeyId || s.canvas,
+      messages: s.messages.concat({ role: "ai", text })
+    }));
   }
 
   genIccid() {
@@ -2372,32 +2404,30 @@ class Component extends DCLogic {
       askTradeIn: () => this.push("Any trade-in credit on these?"),
       askAboutBill: () => this.setState({ chatOpen: true, rightPanel: null, accountOpen: false, canvas: "carryover",
         messages: [{ role: "ai", text: "Hi Sergio. We noticed an unusual roaming charge on this month's statement. Would you like us to look into that?" }],
-        chatPrompts: ["Yes, review roaming charges", "Dispute roaming charges", "Everything looks fine"] }),
+        chatPrompts: [{ label: "Yes, review roaming charges" }, { label: "Dispute roaming charges", journey: "roaming-dispute" }, { label: "Everything looks fine" }] }),
       closeChat: () => this.closeAssistant(),
-      canvasTitle: s.canvas === "carryover" ? (s.view === "home" ? "Overview" : crumb.leaf) : s.canvas,
-      pageHeading: (s.drill || []).length ? s.drill[s.drill.length - 1] : s.view === "tasks" ? "AI tasks" : (s.chatOpen ? (s.canvas === "carryover" ? (s.view === "home" ? "Good morning, Alex" : crumb.leaf) : s.canvas) : (s.view === "home" ? "Good morning, Alex" : crumb.leaf)),
-      canvasHeading: s.canvas === "carryover" ? (s.view === "home" ? "Good morning, Alex" : crumb.leaf) : s.canvas,
-      canvasSub: s.canvas === "carryover" ? "Placeholder greeting — the modules below are structural stand-ins." : "Updated from your conversation.",
-      canvasCarryHome: s.canvas === "carryover" && s.view === "home",
-      canvasCarryShop: s.canvas === "carryover" && s.view === "page" && s.section === "shop",
-      canvasCarryPage: s.canvas === "carryover" && s.view === "page" && s.section !== "shop",
+      // s.canvas holds either "carryover" or a Journey id (see journeys.js) — canvasAdaptive
+      // is active exactly when a Journey is running. canvasPlaceholder is a safety net for a
+      // future Journey that's listed but doesn't have its own canvas markup yet.
       canvasAdaptive: s.canvas !== "carryover",
-      canvasDispute: s.canvas !== "carryover" && /dispute/i.test(s.lastAsk || "") && /roaming/i.test(s.lastAsk || ""),
-      canvasOffer: s.canvas !== "carryover" && /show me the offer/i.test(s.lastAsk || ""),
-      canvasPlaceholder: s.canvas !== "carryover" && !(/dispute/i.test(s.lastAsk || "") && /roaming/i.test(s.lastAsk || "")) && !/show me the offer/i.test(s.lastAsk || ""),
-      canvasSectionBg: (s.canvas !== "carryover" && (/dispute/i.test(s.lastAsk || "") && /roaming/i.test(s.lastAsk || "") || /show me the offer/i.test(s.lastAsk || ""))) ? "transparent" : "#fff",
-      canvasSectionShadow: (s.canvas !== "carryover" && (/dispute/i.test(s.lastAsk || "") && /roaming/i.test(s.lastAsk || "") || /show me the offer/i.test(s.lastAsk || ""))) ? "none" : "var(--vds-shadow-tile)",
-      canvasSectionBorder: (s.canvas !== "carryover" && (/dispute/i.test(s.lastAsk || "") && /roaming/i.test(s.lastAsk || "") || /show me the offer/i.test(s.lastAsk || ""))) ? "none" : "1px solid var(--vds-border-subtle)",
+      canvasDispute: s.canvas === "roaming-dispute",
+      canvasOffer: s.canvas === "device-offer",
+      canvasPlaceholder: s.canvas !== "carryover" && s.canvas !== "roaming-dispute" && s.canvas !== "device-offer",
+      canvasSectionBg: s.canvas !== "carryover" ? "transparent" : "#fff",
+      canvasSectionShadow: s.canvas !== "carryover" ? "none" : "var(--vds-shadow-tile)",
+      canvasSectionBorder: s.canvas !== "carryover" ? "none" : "1px solid var(--vds-border-subtle)",
       draft: s.draft,
       onDraft: (e) => this.setState({ draft: e.target.value }),
       onKey: (e) => { if (e.key === "Enter") this.push(s.draft); },
       send: () => this.push(s.draft),
-      ask1Label: s.chatPrompts ? s.chatPrompts[0] : "Manage my billing",
-      ask2Label: s.chatPrompts ? s.chatPrompts[1] : "Set user permissions",
-      ask3Label: s.chatPrompts ? s.chatPrompts[2] : "Help me run my business",
-      ask1: () => this.push(s.chatPrompts ? s.chatPrompts[0] : "Manage my billing"),
-      ask2: () => this.push(s.chatPrompts ? s.chatPrompts[1] : "Set user permissions"),
-      ask3: () => this.push(s.chatPrompts ? s.chatPrompts[2] : "Help me run my business"),
+      ask1Label: s.chatPrompts ? s.chatPrompts[0].label : "Manage my billing",
+      ask2Label: s.chatPrompts ? s.chatPrompts[1].label : "Set user permissions",
+      ask3Label: s.chatPrompts ? s.chatPrompts[2].label : "Help me run my business",
+      // A prompt with a `journey` id starts that Journey directly; otherwise it's sent as a
+      // plain generic chat message (see push()/GENERIC_CHAT_REPLIES).
+      ask1: () => { const p = s.chatPrompts ? s.chatPrompts[0] : { label: "Manage my billing" }; return p.journey ? this.runJourney(p.journey, { label: p.label }) : this.push(p.label); },
+      ask2: () => { const p = s.chatPrompts ? s.chatPrompts[1] : { label: "Set user permissions" }; return p.journey ? this.runJourney(p.journey, { label: p.label }) : this.push(p.label); },
+      ask3: () => { const p = s.chatPrompts ? s.chatPrompts[2] : { label: "Help me run my business" }; return p.journey ? this.runJourney(p.journey, { label: p.label }) : this.push(p.label); },
       messages: s.messages.map((m, i) => ({ ...m, id: i, isUser: m.role === "user", isAI: m.role === "ai" })),
       disputeCardExpanded: !!s.disputeCardExpanded,
       disputeCardCancelled: !!s.disputeCardCancelled,
