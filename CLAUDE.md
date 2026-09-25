@@ -89,6 +89,22 @@ expect real git merge conflicts, not just noise. When resolving one, re-verify e
 carefully — a clean merge doesn't mean the resulting markup/logic is still correct. See
 "Modularization" below — the plan is to split this file precisely to shrink this risk.
 
+## Stay in sync with main
+Multiple makers can have Claude sessions running against this repo at once. A session that
+works for a long stretch without checking `main` risks building on code someone else has
+already changed underneath it, which turns into a much harder conflict later than if it had
+been caught early. Claude should check for this proactively, not just once at branch creation:
+- **Before creating a branch** (step 1 above): `git checkout main && git pull`.
+- **At natural checkpoints during a session** — after finishing a meaningful chunk of work, or
+  before starting a new one within the same session — run
+  `git fetch origin && git log HEAD..origin/main --oneline`. If that shows any commits, tell
+  the maker plainly what landed (the commit summaries) and ask whether to merge/rebase
+  `origin/main` into the current branch now, rather than silently continuing on stale code.
+- **Immediately before merging your own PR** — re-run the same check. If `main` moved since
+  the branch was created, merge/rebase it in, re-verify by running the prototype again, and
+  only then merge. Don't let a stale self-merge silently conflict with or clobber a change
+  someone else already landed.
+
 ## Modularization (in progress, staged)
 The single 3000+ line `.dc.html` file is the main reason concurrent edits collide. Splitting
 it via `dc-import` is happening incrementally, not all at once (no tests exist, so a big-bang
@@ -107,6 +123,8 @@ split has no way to catch a regression):
 - Prefer the Figma MCP skills for anything visual rather than hand-authoring CSS/markup that
   approximates a design.
 - Always verify by running the prototype before merging a PR — see the workflow above.
+- Proactively check `origin/main` for new commits at natural checkpoints and before merging —
+  see "Stay in sync with main" above. Don't wait to be asked.
 - **Read `ARCHITECTURE.md` before adding/changing a persona, widget, or scripted agent/canvas
   interaction.** When a maker prompts a change:
   1. Classify it first (persona/widget/journey data edit vs. something new) and say which one
